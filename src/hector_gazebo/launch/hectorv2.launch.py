@@ -19,24 +19,16 @@ robot_name = 'hector_description'
 initial_pose = [0.0, 0.0, 0.55, 0.0, 0.0, 0.0]
 
 # configure robot's urdf file
-hector_assets_pkg = 'hector_assets'
-robot_description_subpath = 'models/xacro/robot.xacro'
-xacro_file = os.path.join(get_package_share_directory(hector_assets_pkg),robot_description_subpath)
+hector_gazebo_pkg_path = get_package_share_directory('hector_gazebo')
+robot_description_subpath = 'assets/models/xacro/robot.xacro'
+xacro_file = os.path.join(hector_gazebo_pkg_path,robot_description_subpath)
 robot_description_raw = xacro.process_file(xacro_file).toxml()
-
-#configure paths
-gazebo_ros_pkg_path = get_package_share_directory('gazebo_ros')
-hector_assets_pkg_path = get_package_share_directory('hector_assets')
 
 # Set the path to the world file
 world_file_name = 'empty.world'
-world_path = os.path.join(hector_assets_pkg_path, 'models' , 'worlds', world_file_name)
-rviz_config_file = os.path.join(hector_assets_pkg_path, 'config', 'rviz', 'hectorv2.rviz')
+world_path = os.path.join(hector_gazebo_pkg_path, 'assets', 'models', 'worlds', world_file_name)
 
-# Hector logs package
-hector_logs_pkg = 'hector_logs'
-# data_files_path = os.path.join(get_package_prefix(hector_logs_pkg)).replace('install', 'src/hector-ros2')
-simulator_name = 'gazebo'
+
 
 def generate_launch_description():
     # Start robot state publisher

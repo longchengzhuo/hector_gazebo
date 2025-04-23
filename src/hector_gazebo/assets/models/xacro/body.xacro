@@ -28,7 +28,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
             <geometry>
-                <mesh filename="file://$(find hector_assets)/models/meshes/body.stl" scale="1 1 1"/> 
+                <mesh filename="file://$(find hector_gazebo)/assets/models/meshes/body.stl" scale="1 1 1"/> 
             </geometry>
             <material name="black"/>
         </visual>
@@ -91,7 +91,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
                 <geometry>
-                    <mesh filename="file://$(find hector_assets)/models/meshes/Head.STL" scale="0.001 0.001 0.001"/>
+                    <mesh filename="file://$(find hector_gazebo)/assets/models/meshes/Head.STL" scale="0.001 0.001 0.001"/>
                 </geometry>
             <material name="black"/>
         </visual>
@@ -119,7 +119,7 @@
         <visual>
             <origin rpy="0 0 0" xyz="0 0 0"/>
                 <geometry>
-                    <mesh filename="file://$(find hector_assets)/models/meshes/NUC_backpack.STL" scale="1 1 1"/>
+                    <mesh filename="file://$(find hector_gazebo)/assets/models/meshes/NUC_backpack.STL" scale="1 1 1"/>
                 </geometry>
             <material name="black"/>
         </visual>

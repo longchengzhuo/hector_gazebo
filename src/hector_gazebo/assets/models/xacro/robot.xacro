@@ -5,13 +5,13 @@
 <robot name="hector_v2" xmlns:xacro="http://www.ros.org/wiki/xacro">
 
     <!-- Include constants, materials, limb kinematics, & gazebo config -->
-    <xacro:include filename="$(find hector_assets)/models/xacro/const.xacro"/>
-    <xacro:include filename="$(find hector_assets)/models/xacro/materials.xacro"/>
-    <xacro:include filename="$(find hector_assets)/models/xacro/leg.xacro"/>
-    <xacro:include filename="$(find hector_assets)/models/xacro/arm.xacro"/>
+    <xacro:include filename="$(find hector_gazebo)/assets/models/xacro/const.xacro"/>
+    <xacro:include filename="$(find hector_gazebo)/assets/models/xacro/materials.xacro"/>
+    <xacro:include filename="$(find hector_gazebo)/assets/models/xacro/leg.xacro"/>
+    <xacro:include filename="$(find hector_gazebo)/assets/models/xacro/arm.xacro"/>
 
     <!-- Define the robot's trunk -->
-    <xacro:include filename="$(find hector_assets)/models/xacro/body.xacro"/>
+    <xacro:include filename="$(find hector_gazebo)/assets/models/xacro/body.xacro"/>
 
     <!-- Define the robot's legs -->
     <xacro:leg name="L" mirror="1" mirror_dae="False">
@@ -30,9 +30,9 @@
     <xacro:arm name="R" mirror="-1" mirror_dae="False">
         <origin rpy="0 0 0" xyz="${hip_yaw_offset_x} ${-hip_yaw_offset_y} ${-hip_yaw_offset_z}"/>
     </xacro:arm>    
-    <xacro:include filename="$(find hector_assets)/models/xacro/gazebo.xacro"/>
+    <xacro:include filename="$(find hector_gazebo)/assets/models/xacro/gazebo.xacro"/>
 
     <!-- Include the ros2_control plugins -->
-    <xacro:include filename="$(find hector_assets)/models/xacro/hardware.xacro"/>
+    <xacro:include filename="$(find hector_gazebo)/assets/models/xacro/hardware.xacro"/>
     
 </robot>

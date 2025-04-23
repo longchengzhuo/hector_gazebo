@@ -2,7 +2,7 @@
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <!-- <xacro:include filename="$(find hector_assets)/models/xacro/transmission.xacro"/> -->
+    <!-- <xacro:include filename="$(find hector_gazebo)/assets/models/xacro/transmission.xacro"/> -->
 
     <xacro:macro name="leg" params="name mirror mirror_dae  *origin">
 
@@ -25,12 +25,12 @@
                 <origin rpy="0 0 0" xyz="0 0 0.02"/>
                 <xacro:if value="${(mirror_dae == True)}">
                     <geometry>
-                        <mesh filename="file://$(find hector_assets)/models/meshes/R_hip_yaw.STL" scale="1 1 1"/>
+                        <mesh filename="file://$(find hector_gazebo)/assets/models/meshes/R_hip_yaw.STL" scale="1 1 1"/>
                     </geometry>
                 </xacro:if>
                 <xacro:if value="${(mirror_dae == False)}">
                    <geometry>
-                        <mesh filename="file://$(find hector_assets)/models/meshes/L_hip_yaw.STL" scale="1 1 1"/>
+                        <mesh filename="file://$(find hector_gazebo)/assets/models/meshes/L_hip_yaw.STL" scale="1 1 1"/>
                     </geometry>
                 </xacro:if>
                 <material name="grey"/>
@@ -94,12 +94,12 @@
                 <origin rpy="0 0 0" xyz="0 0 0"/>
                 <xacro:if value="${(mirror_dae == True)}">
                     <geometry>
-                        <mesh filename="file://$(find hector_assets)/models/meshes/R_hip_roll.STL" scale="1 1 1"/>
+                        <mesh filename="file://$(find hector_gazebo)/assets/models/meshes/R_hip_roll.STL" scale="1 1 1"/>
                     </geometry>
                 </xacro:if>
                 <xacro:if value="${(mirror_dae == False)}">
                    <geometry>
-                        <mesh filename="file://$(find hector_assets)/models/meshes/L_hip_roll.STL" scale="1 1 1"/>
+                        <mesh filename="file://$(find hector_gazebo)/assets/models/meshes/L_hip_roll.STL" scale="1 1 1"/>
                     </geometry>
                 </xacro:if>
                 <material name="gold"/>
@@ -164,12 +164,12 @@
                 <origin rpy="0 0 0" xyz="0 0 0"/>
                 <xacro:if value="${(mirror_dae == True)}">
                     <geometry>
-                        <mesh filename="file://$(find hector_assets)/models/meshes/hip_pitch_combined_R2.stl" scale="1 1 1"/>
+                        <mesh filename="file://$(find hector_gazebo)/assets/models/meshes/hip_pitch_combined_R2.stl" scale="1 1 1"/>
                     </geometry>
                 </xacro:if>
                 <xacro:if value="${(mirror_dae == False)}">
                    <geometry>
-                        <mesh filename="file://$(find hector_assets)/models/meshes/hip_pitch_combined_L2.stl" scale="1 1 1"/>
+                        <mesh filename="file://$(find hector_gazebo)/assets/models/meshes/hip_pitch_combined_L2.stl" scale="1 1 1"/>
                     </geometry>
                 </xacro:if>
                 <material name="grey"/>
@@ -252,12 +252,12 @@
                 <origin rpy="0 0 0" xyz="0 0 0"/>
                 <xacro:if value="${(mirror_dae == True)}">
                     <geometry>
-                        <mesh filename="file://$(find hector_assets)/models/meshes/knee_combined_R.stl" scale="1 1 1"/>
+                        <mesh filename="file://$(find hector_gazebo)/assets/models/meshes/knee_combined_R.stl" scale="1 1 1"/>
                     </geometry>
                 </xacro:if>
                 <xacro:if value="${(mirror_dae == False)}">
                    <geometry>
-                        <mesh filename="file://$(find hector_assets)/models/meshes/knee_combined_L.stl" scale="1 1 1"/>
+                        <mesh filename="file://$(find hector_gazebo)/assets/models/meshes/knee_combined_L.stl" scale="1 1 1"/>
                     </geometry>
                 </xacro:if>
                 <material name="grey"/>
@@ -292,12 +292,12 @@
                 <origin rpy="0 0 0" xyz="0 0 0"/>
                 <xacro:if value="${(mirror_dae == True)}">
                     <geometry>
-                        <mesh filename="file://$(find hector_assets)/models/meshes/foot_R2.stl" scale="1 1 1"/>
+                        <mesh filename="file://$(find hector_gazebo)/assets/models/meshes/foot_R2.stl" scale="1 1 1"/>
                     </geometry>
                 </xacro:if>
                 <xacro:if value="${(mirror_dae == False)}">
                    <geometry>
-                        <mesh filename="file://$(find hector_assets)/models/meshes/foot_L2.stl" scale="1 1 1"/>
+                        <mesh filename="file://$(find hector_gazebo)/assets/models/meshes/foot_L2.stl" scale="1 1 1"/>
                     </geometry>
                 </xacro:if>
                 <material name="grey"/>

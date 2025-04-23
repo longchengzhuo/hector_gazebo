@@ -8,7 +8,6 @@
   <exec_depend>ament_index_python</exec_depend>
   <exec_depend>launch_ros</exec_depend>
   <exec_depend>gazebo_ros</exec_depend>
-  <exec_depend>hector_assets</exec_depend>
   <exec_depend>robot_state_publisher</exec_depend>
   <exec_depend>controller_manager</exec_depend>
   <exec_depend>python3-xacro</exec_depend>
