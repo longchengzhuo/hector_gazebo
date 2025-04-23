@@ -1,0 +1,1264 @@
+<?xml version="1.0" ?>
+<robot name="hector_v2">
+  <material name="black">
+    <color rgba="0.1 0.1 0.1 0.55"/>
+  </material>
+  <material name="blue">
+    <color rgba="0.0 0.0 0.8 1.0"/>
+  </material>
+  <material name="green">
+    <color rgba="0.0 0.8 0.0 1.0"/>
+  </material>
+  <material name="grey">
+    <color rgba="0.2 0.2 0.2 1.0"/>
+  </material>
+  <material name="silver">
+    <color rgba="0.9137254901960784 0.9137254901960784 0.8470588235294118 1.0"/>
+  </material>
+  <material name="orange">
+    <color rgba="1.0 0.4235294117647059 0.0392156862745098 1.0"/>
+  </material>
+  <material name="brown">
+    <color rgba="0.8705882352941177 0.8117647058823529 0.7647058823529411 1.0"/>
+  </material>
+  <material name="red">
+    <color rgba="0.8 0.0 0.0 1.0"/>
+  </material>
+  <material name="white">
+    <color rgba="1.0 1.0 1.0 1.0"/>
+  </material>
+  <material name="gold">
+    <color rgba="1.0 0.8431372549019608 0.0 1.0"/>
+  </material>
+  <material name="light_aluminum">
+    <color rgba="0.8784313725490196 0.8784313725490196 0.8784313725490196 1.0"/>
+  </material>
+  <!-- <xacro:include filename="$(find hector_assets)/models/xacro/transmission.xacro"/> -->
+  <!-- Show the trajectory of trunk center. -->
+  <gazebo>
+    <plugin filename="libLinkPlot3DPlugin.so" name="3dplot">
+      <frequency>10</frequency>
+      <plot>
+        <link>trunk</link>
+        <pose>0 0 0 0 0 0</pose>
+        <material>Gazebo/Gold</material>
+      </plot>
+    </plugin>
+  </gazebo>
+  <gazebo reference="imu_link">
+    <gravity>true</gravity>
+    <sensor name="imu_sensor" type="imu">
+      <always_on>true</always_on>
+      <update_rate>1000</update_rate>
+      <visualize>true</visualize>
+      <topic>__default_topic__</topic>
+      <plugin filename="libgazebo_ros_imu_sensor.so" name="imu_plugin">
+        <topicName>trunk_imu</topicName>
+        <bodyName>imu_link</bodyName>
+        <updateRateHZ>1000.0</updateRateHZ>
+        <gaussianNoise>0.00</gaussianNoise>
+        <xyzOffset>0 0 0</xyzOffset>
+        <rpyOffset>0 0 0</rpyOffset>
+        <frameName>imu_link</frameName>
+      </plugin>
+      <pose>0 0 0 0 0 0</pose>
+    </sensor>
+  </gazebo>
+  <gazebo reference="base">
+    <material>Gazebo/Green</material>
+    <turnGravityOff>false</turnGravityOff>
+  </gazebo>
+  <gazebo reference="trunk">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/DarkGrey</material>
+  </gazebo>
+  <gazebo reference="trunkcol">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+  </gazebo>
+  <gazebo reference="stick_link">
+    <mu1>0.2</mu1>
+    <mu2>0.2</mu2>
+    <material>Gazebo/White</material>
+  </gazebo>
+  <gazebo reference="imu_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <material>Gazebo/Black</material>
+  </gazebo>
+  <!-- L leg -->
+  <gazebo reference="L_hip_yaw_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <kp value="100000.0"/>
+    <kd value="1000.0"/>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="L_hip_roll_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <kp value="100000.0"/>
+    <kd value="1000.0"/>
+    <material>Gazebo/Gold</material>
+  </gazebo>
+  <gazebo reference="L_hip_pitch_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <kp value="100000.0"/>
+    <kd value="1000.0"/>
+    <self_collide>0</self_collide>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="L_knee_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <kp value="100000.0"/>
+    <kd value="1000.0"/>
+    <self_collide>0</self_collide>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="L_ankle_link">
+    <mu1>3</mu1>
+    <mu2>3</mu2>
+    <kp value="1000000.0"/>
+    <kd value="1000.0"/>
+    <self_collide>0</self_collide>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <!--R leg -->
+  <gazebo reference="R_hip_yaw_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <kp value="100000.0"/>
+    <kd value="1000.0"/>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="R_hip_roll_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <kp value="100000.0"/>
+    <kd value="1000.0"/>
+    <material>Gazebo/Gold</material>
+  </gazebo>
+  <gazebo reference="R_hip_pitch_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <kp value="100000.0"/>
+    <kd value="1000.0"/>
+    <self_collide>0</self_collide>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="R_knee_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <kp value="100000.0"/>
+    <kd value="1000.0"/>
+    <self_collide>0</self_collide>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="R_ankle_link">
+    <mu1>3</mu1>
+    <mu2>3</mu2>
+    <kp value="1000000.0"/>
+    <kd value="1000.0"/>
+    <self_collide>0</self_collide>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <!-- L arm -->
+  <gazebo reference="L_shoulder_yaw_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <kp value="100000.0"/>
+    <kd value="1000.0"/>
+    <material>Gazebo/Gold</material>
+  </gazebo>
+  <gazebo reference="L_shoulder_pitch_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <kp value="100000.0"/>
+    <kd value="1000.0"/>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="L_shoulder_roll_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <kp value="100000.0"/>
+    <kd value="1000.0"/>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="L_elbow_link">
+    <mu1>3</mu1>
+    <mu2>3</mu2>
+    <kp value="1000000.0"/>
+    <kd value="1000.0"/>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <!-- R arm -->
+  <gazebo reference="R_shoulder_yaw_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <kp value="100000.0"/>
+    <kd value="1000.0"/>
+    <material>Gazebo/Gold</material>
+  </gazebo>
+  <gazebo reference="R_shoulder_pitch_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <kp value="100000.0"/>
+    <kd value="1000.0"/>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="R_shoulder_roll_link">
+    <mu1>1</mu1>
+    <mu2>1</mu2>
+    <kp value="100000.0"/>
+    <kd value="1000.0"/>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <gazebo reference="R_elbow_link">
+    <mu1>3</mu1>
+    <mu2>3</mu2>
+    <kp value="1000000.0"/>
+    <kd value="1000.0"/>
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <!-- head_link -->
+  <gazebo reference="head_link">
+    <material>Gazebo/Grey</material>
+  </gazebo>
+  <!--NUC link  -->
+  <!-- <gazebo reference="nuc_link">
+        <material>Gazebo/DarkGrey</material>
+    </gazebo> -->
+  <link name="world"/>
+  <joint name="base_static_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="world"/>
+    <child link="base_link"/>
+  </joint>
+  <link name="base_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.001 0.001 0.001"/>
+      </geometry>
+    </visual>
+  </link>
+  <joint name="floating_base" type="fixed">
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="trunk"/>
+  </joint>
+  <link name="trunk">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/body.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.125 0.19 0.248"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.0 0.0"/>
+      <mass value="5.7"/>
+      <inertia ixx="0.0463619" ixy="0.0" ixz="0.0" iyy="0.036636" iyz="0.0" izz="0.024569"/>
+    </inertial>
+  </link>
+  <joint name="imu_joint" type="fixed">
+    <parent link="trunk"/>
+    <child link="imu_link"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+  </joint>
+  <link name="imu_link">
+    <inertial>
+      <mass value="0.001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size=".001 .001 .001"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- TODO: add inertial properties and update controller -->
+  <joint name="head" type="fixed">
+    <parent link="trunk"/>
+    <child link="head_link"/>
+    <origin rpy="0 3.141592653589793 1.5707963267948966" xyz="0.07 0.0458 0.3"/>
+  </joint>
+  <link name="head_link">
+    <inertial>
+      <mass value="0.001"/>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/Head.STL" scale="0.001 0.001 0.001"/>
+      </geometry>
+      <material name="black"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size=".001 .001 .001"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- TODO: add inertial properties and update controller -->
+  <!-- <joint name="nuc_joint" type="fixed">
+        <parent link="trunk"/>
+        <child link="nuc_link"/>
+        <origin rpy="0 0 ${PI}" xyz="-0.055 0.08 -0.055"/>
+    </joint>
+
+    <link name="nuc_link">
+        <inertial>
+            <mass value="0.001"/>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <inertia ixx="0.0001" ixy="0" ixz="0" iyy="0.0001" iyz="0" izz="0.0001"/>
+        </inertial>
+        <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <mesh filename="file://$(find hector_assets)/models/meshes/NUC_backpack.STL" scale="1 1 1"/>
+                </geometry>
+            <material name="black"/>
+        </visual>
+        <collision>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <box size=".001 .001 .001"/>
+            </geometry>
+        </collision>
+    </link>   -->
+  <joint name="L_hip_yaw_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 0.047 -0.1265"/>
+    <parent link="trunk"/>
+    <child link="L_hip_yaw_link"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.1" friction="0.0"/>
+    <limit effort="33.5" lower="-0.5235987755982988" upper="0.5235987755982988" velocity="21"/>
+  </joint>
+  <link name="L_hip_yaw_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.02"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/L_hip_yaw.STL" scale="1 1 1"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.015 0.0 -0.002"/>
+      <geometry>
+        <box size="0.0001 0.0001 0.0001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.025109 -0.002292 -0.024732"/>
+      <mass value="0.224"/>
+      <inertia ixx="2.104e-06" ixy="0.0" ixz="0.0" iyy="5.354e-06" iyz="0.0" izz="7.416e-06"/>
+    </inertial>
+  </link>
+  <!--this link is only for motor mass & colllision-->
+  <joint name="L_hip_yaw_trans_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.079 0.015 -0.0705"/>
+    <parent link="L_hip_yaw_link"/>
+    <child link="L_hip_yaw_trans_link"/>
+  </joint>
+  <link name="L_hip_yaw_trans_link">
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.04" radius="0.045"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0.65"/>
+      <inertia ixx="0.00043875" ixy="0.0" ixz="0.0" iyy="0.00043875" iyz="0.0" izz="0.000658125"/>
+    </inertial>
+  </link>
+  <joint name="L_hip_roll_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0465 0.015 -0.0705"/>
+    <parent link="L_hip_yaw_link"/>
+    <child link="L_hip_roll_link"/>
+    <axis xyz="1 0 0"/>
+    <dynamics damping="0.1" friction="0.0"/>
+    <limit effort="33.5" lower="-0.5235987755982988" upper="0.5235987755982988" velocity="21"/>
+  </joint>
+  <link name="L_hip_roll_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/L_hip_roll.STL" scale="1 1 1"/>
+      </geometry>
+      <material name="gold"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.1 0 0"/>
+      <geometry>
+        <box size="1e-05 1e-05 1e-05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.033217 -0.010231 0"/>
+      <mass value="0.095"/>
+      <inertia ixx="5.1083e-05" ixy="0.0" ixz="0.0" iyy="1.39825e-05" iyz="0.0" izz="9.3473e-05"/>
+    </inertial>
+  </link>
+  <!--this link is only for collision-->
+  <joint name="L_hip_roll_trans_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.06 -0.015 0.0"/>
+    <parent link="L_hip_roll_link"/>
+    <child link="L_hip_roll_trans_link"/>
+  </joint>
+  <link name="L_hip_roll_trans_link">
+    <collision>
+      <origin rpy="-1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.04" radius="0.045"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="-1.5707963267948966 0 0" xyz="0 0 0"/>
+      <mass value="0.65"/>
+      <inertia ixx="0.00043875" ixy="0.0" ixz="0.0" iyy="0.00043875" iyz="0.0" izz="0.000658125"/>
+    </inertial>
+  </link>
+  <joint name="L_hip_pitch_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.06 0.018 0"/>
+    <parent link="L_hip_roll_link"/>
+    <child link="L_hip_pitch_link"/>
+    <axis xyz="0 1 0"/>
+    <joint_properties damping="0.1" friction="0.0"/>
+    <!-- <limit effort="${hip_pitch_torque_max}" velocity="${hip_pitch_velocity_max}"/> -->
+    <limit effort="33.5" lower="-3.14" upper="3.14" velocity="21"/>
+  </joint>
+  <link name="L_hip_pitch_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/hip_pitch_combined_L2.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.0 0.0175 -0.09"/>
+      <geometry>
+        <box size="0.06 0.035 0.18"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.000147 0.01991 -0.081117"/>
+      <mass value="0.642"/>
+      <inertia ixx="0.004437615" ixy="0.0" ixz="0.0" iyy="0.004788512" iyz="0.0" izz="0.000661818"/>
+    </inertial>
+  </link>
+  <!--this link is only for collision-->
+  <joint name="L_hip_pitch1_trans_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 0.0625 0.0"/>
+    <parent link="L_hip_pitch_link"/>
+    <child link="L_hip_pitch1_trans_link"/>
+  </joint>
+  <link name="L_hip_pitch1_trans_link">
+    <collision>
+      <origin rpy="-1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.04" radius="0.045"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="-1.5707963267948966 0 0" xyz="0 0 0"/>
+      <mass value="0.65"/>
+      <inertia ixx="0.00043875" ixy="0.0" ixz="0.0" iyy="0.00043875" iyz="0.0" izz="0.000658125"/>
+    </inertial>
+  </link>
+  <!--this link is only for collision-->
+  <joint name="L_hip_pitch2_trans_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 -0.0225 -0.097"/>
+    <parent link="L_hip_pitch_link"/>
+    <child link="L_hip_pitch2_trans_link"/>
+  </joint>
+  <link name="L_hip_pitch2_trans_link">
+    <collision>
+      <origin rpy="-1.5707963267948966 0 0" xyz="0 0.0725 0"/>
+      <geometry>
+        <cylinder length="0.04" radius="0.045"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="-1.5707963267948966 0 0" xyz="0 0.0725 0"/>
+      <mass value="0.65"/>
+      <inertia ixx="0.00043875" ixy="0.0" ixz="0.0" iyy="0.00043875" iyz="0.0" izz="0.000658125"/>
+    </inertial>
+  </link>
+  <joint name="L_knee_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 0 -0.22"/>
+    <parent link="L_hip_pitch_link"/>
+    <child link="L_knee_link"/>
+    <axis xyz="0 1 0"/>
+    <joint_properties damping="0.1" friction="0.0"/>
+    <limit effort="33.5" lower="-3.14" upper="3.14" velocity="21"/>
+  </joint>
+  <link name="L_knee_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/knee_combined_L.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.0 0.015 -0.11"/>
+      <geometry>
+        <cylinder length="0.2" radius="0.02"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 0.020417 -0.1141"/>
+      <mass value="0.303"/>
+      <inertia ixx="0.001911" ixy="0.0" ixz="0.0" iyy="0.00191038" iyz="0.0" izz="6.8352e-05"/>
+    </inertial>
+  </link>
+  <joint name="L_ankle_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 0.0 -0.22"/>
+    <parent link="L_knee_link"/>
+    <child link="L_ankle_link"/>
+    <axis xyz="0 1 0"/>
+    <joint_properties damping="0.1" friction="0.0"/>
+    <limit effort="33.5" lower="-1.4" upper="1.4" velocity="21"/>
+  </joint>
+  <link name="L_ankle_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/foot_L2.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.01 0.0194 -0.02"/>
+      <geometry>
+        <box size="0.15 0.02 0.04"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.010569 0.017949 -0.017118"/>
+      <mass value="0.214"/>
+      <inertia ixx="5.7298e-05" ixy="0.0" ixz="0.0" iyy="0.000290752" iyz="0.0" izz="0.000249491"/>
+    </inertial>
+  </link>
+  <!-- <xacro:leg_transmission name="${name}"/> -->
+  <joint name="R_hip_yaw_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 -0.047 -0.1265"/>
+    <parent link="trunk"/>
+    <child link="R_hip_yaw_link"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.1" friction="0.0"/>
+    <limit effort="33.5" lower="-0.5235987755982988" upper="0.5235987755982988" velocity="21"/>
+  </joint>
+  <link name="R_hip_yaw_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0.02"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/R_hip_yaw.STL" scale="1 1 1"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.015 0.0 -0.002"/>
+      <geometry>
+        <box size="0.0001 0.0001 0.0001"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.025109 -0.002292 -0.024732"/>
+      <mass value="0.224"/>
+      <inertia ixx="2.104e-06" ixy="0.0" ixz="0.0" iyy="5.354e-06" iyz="0.0" izz="7.416e-06"/>
+    </inertial>
+  </link>
+  <!--this link is only for motor mass & colllision-->
+  <joint name="R_hip_yaw_trans_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.079 -0.015 -0.0705"/>
+    <parent link="R_hip_yaw_link"/>
+    <child link="R_hip_yaw_trans_link"/>
+  </joint>
+  <link name="R_hip_yaw_trans_link">
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.04" radius="0.045"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0.65"/>
+      <inertia ixx="0.00043875" ixy="0.0" ixz="0.0" iyy="0.00043875" iyz="0.0" izz="0.000658125"/>
+    </inertial>
+  </link>
+  <joint name="R_hip_roll_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0465 -0.015 -0.0705"/>
+    <parent link="R_hip_yaw_link"/>
+    <child link="R_hip_roll_link"/>
+    <axis xyz="1 0 0"/>
+    <dynamics damping="0.1" friction="0.0"/>
+    <limit effort="33.5" lower="-0.5235987755982988" upper="0.5235987755982988" velocity="21"/>
+  </joint>
+  <link name="R_hip_roll_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/R_hip_roll.STL" scale="1 1 1"/>
+      </geometry>
+      <material name="gold"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.1 0 0"/>
+      <geometry>
+        <box size="1e-05 1e-05 1e-05"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.033217 -0.010231 0"/>
+      <mass value="0.095"/>
+      <inertia ixx="5.1083e-05" ixy="0.0" ixz="0.0" iyy="1.39825e-05" iyz="0.0" izz="9.3473e-05"/>
+    </inertial>
+  </link>
+  <!--this link is only for collision-->
+  <joint name="R_hip_roll_trans_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="-0.06 0.015 0.0"/>
+    <parent link="R_hip_roll_link"/>
+    <child link="R_hip_roll_trans_link"/>
+  </joint>
+  <link name="R_hip_roll_trans_link">
+    <collision>
+      <origin rpy="-1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.04" radius="0.045"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="-1.5707963267948966 0 0" xyz="0 0 0"/>
+      <mass value="0.65"/>
+      <inertia ixx="0.00043875" ixy="0.0" ixz="0.0" iyy="0.00043875" iyz="0.0" izz="0.000658125"/>
+    </inertial>
+  </link>
+  <joint name="R_hip_pitch_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.06 -0.018 0"/>
+    <parent link="R_hip_roll_link"/>
+    <child link="R_hip_pitch_link"/>
+    <axis xyz="0 1 0"/>
+    <joint_properties damping="0.1" friction="0.0"/>
+    <!-- <limit effort="${hip_pitch_torque_max}" velocity="${hip_pitch_velocity_max}"/> -->
+    <limit effort="33.5" lower="-3.14" upper="3.14" velocity="21"/>
+  </joint>
+  <link name="R_hip_pitch_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/hip_pitch_combined_R2.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.0 -0.0175 -0.09"/>
+      <geometry>
+        <box size="0.06 0.035 0.18"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.000147 -0.01991 -0.081117"/>
+      <mass value="0.642"/>
+      <inertia ixx="0.004437615" ixy="0.0" ixz="0.0" iyy="0.004788512" iyz="0.0" izz="0.000661818"/>
+    </inertial>
+  </link>
+  <!--this link is only for collision-->
+  <joint name="R_hip_pitch1_trans_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 -0.0625 0.0"/>
+    <parent link="R_hip_pitch_link"/>
+    <child link="R_hip_pitch1_trans_link"/>
+  </joint>
+  <link name="R_hip_pitch1_trans_link">
+    <collision>
+      <origin rpy="-1.5707963267948966 0 0" xyz="0 0 0"/>
+      <geometry>
+        <cylinder length="0.04" radius="0.045"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="-1.5707963267948966 0 0" xyz="0 0 0"/>
+      <mass value="0.65"/>
+      <inertia ixx="0.00043875" ixy="0.0" ixz="0.0" iyy="0.00043875" iyz="0.0" izz="0.000658125"/>
+    </inertial>
+  </link>
+  <!--this link is only for collision-->
+  <joint name="R_hip_pitch2_trans_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 0.0225 -0.097"/>
+    <parent link="R_hip_pitch_link"/>
+    <child link="R_hip_pitch2_trans_link"/>
+  </joint>
+  <link name="R_hip_pitch2_trans_link">
+    <collision>
+      <origin rpy="-1.5707963267948966 0 0" xyz="0 -0.0725 0"/>
+      <geometry>
+        <cylinder length="0.04" radius="0.045"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="-1.5707963267948966 0 0" xyz="0 -0.0725 0"/>
+      <mass value="0.65"/>
+      <inertia ixx="0.00043875" ixy="0.0" ixz="0.0" iyy="0.00043875" iyz="0.0" izz="0.000658125"/>
+    </inertial>
+  </link>
+  <joint name="R_knee_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 0 -0.22"/>
+    <parent link="R_hip_pitch_link"/>
+    <child link="R_knee_link"/>
+    <axis xyz="0 1 0"/>
+    <joint_properties damping="0.1" friction="0.0"/>
+    <limit effort="33.5" lower="-3.14" upper="3.14" velocity="21"/>
+  </joint>
+  <link name="R_knee_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/knee_combined_R.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.0 -0.015 -0.11"/>
+      <geometry>
+        <cylinder length="0.2" radius="0.02"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 -0.020417 -0.1141"/>
+      <mass value="0.303"/>
+      <inertia ixx="0.001911" ixy="0.0" ixz="0.0" iyy="0.00191038" iyz="0.0" izz="6.8352e-05"/>
+    </inertial>
+  </link>
+  <joint name="R_ankle_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 0.0 -0.22"/>
+    <parent link="R_knee_link"/>
+    <child link="R_ankle_link"/>
+    <axis xyz="0 1 0"/>
+    <joint_properties damping="0.1" friction="0.0"/>
+    <limit effort="33.5" lower="-1.4" upper="1.4" velocity="21"/>
+  </joint>
+  <link name="R_ankle_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/foot_R2.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0.01 -0.0194 -0.02"/>
+      <geometry>
+        <box size="0.15 0.02 0.04"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.010569 -0.017949 -0.017118"/>
+      <mass value="0.214"/>
+      <inertia ixx="5.7298e-05" ixy="0.0" ixz="0.0" iyy="0.000290752" iyz="0.0" izz="0.000249491"/>
+    </inertial>
+  </link>
+  <!-- <xacro:leg_transmission name="${name}"/> -->
+  <joint name="L_shoulder_yaw_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 0.047 0.1725"/>
+    <parent link="trunk"/>
+    <child link="L_shoulder_yaw_link"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.1" friction="0.0"/>
+    <limit effort="17" lower="-1.4" upper="1.5708" velocity="33"/>
+  </joint>
+  <link name="L_shoulder_yaw_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.062"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/hector_arm/ShoulderYaw_L.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 -0.021 0"/>
+      <geometry>
+        <cylinder length="0.08" radius="0.041"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.00071 0.02838 0.04835"/>
+      <mass value="0.4356"/>
+      <inertia ixx="0.00035" ixy="0.0" ixz="2e-05" iyy="0.00043" iyz="0.00063" izz="0.00027"/>
+    </inertial>
+  </link>
+  <joint name="L_shoulder_pitch_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 0.045 -0.018"/>
+    <parent link="L_shoulder_yaw_link"/>
+    <child link="L_shoulder_pitch_link"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0.1" friction="0.0"/>
+    <limit effort="17" lower="-3.14" upper="1.5708" velocity="33"/>
+  </joint>
+  <link name="L_shoulder_pitch_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/hector_arm/ShoulderPitch_L.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="gold"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 -0.125"/>
+      <geometry>
+        <box size="0.25 0.034 0.043"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.0294 0.04541 0.00089"/>
+      <mass value="0.432"/>
+      <inertia ixx="0.00042" ixy="-2e-05" ixz="0.0" iyy="0.00027" iyz="0.0" izz="0.00033"/>
+    </inertial>
+  </link>
+  <joint name="L_shoulder_roll_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.0135 0.045 0.0"/>
+    <parent link="L_shoulder_pitch_link"/>
+    <child link="L_shoulder_roll_link"/>
+    <axis xyz="1 0 0"/>
+    <dynamics damping="0.1" friction="0.0"/>
+    <limit effort="17" lower="-0.1" upper="1.4" velocity="33"/>
+  </joint>
+  <link name="L_shoulder_roll_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/hector_arm/UpperArmRoll_L.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0.04 0 -0.125"/>
+      <geometry>
+        <box size="0.25 0.034 0.043"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.04492 0.01006 -0.03218"/>
+      <mass value="0.66484"/>
+      <inertia ixx="0.00318" ixy="1e-05" ixz="0.0" iyy="0.00325" iyz="0.00037" izz="0.00049"/>
+    </inertial>
+  </link>
+  <joint name="L_elbow_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.04 0.0 -0.20"/>
+    <parent link="L_shoulder_roll_link"/>
+    <child link="L_elbow_link"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0.1" friction="0.0"/>
+    <limit effort="24.09" lower="-2.78" upper="2.63" velocity="23.29"/>
+  </joint>
+  <link name="L_elbow_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/hector_arm/ForeArmPitch.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 -0.125"/>
+      <geometry>
+        <box size="0.25 0.016 0.016"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 8e-05 -0.11722"/>
+      <mass value="0.1578"/>
+      <inertia ixx="0.00129" ixy="0.0" ixz="0.0" iyy="0.0013" iyz="0.0" izz="2e-05"/>
+    </inertial>
+  </link>
+  <joint name="L_EE_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 0.0 -0.20"/>
+    <parent link="L_elbow_link"/>
+    <child link="L_EE_link"/>
+  </joint>
+  <link name="L_EE_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.02"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0.0001"/>
+      <inertia ixx="0.0000001" ixy="0.0000001" ixz="0.0000001" iyy="0.0000001" iyz="0.0000001" izz="0.0000001"/>
+    </inertial>
+  </link>
+  <joint name="R_shoulder_yaw_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 -0.047 0.1725"/>
+    <parent link="trunk"/>
+    <child link="R_shoulder_yaw_link"/>
+    <axis xyz="0 0 1"/>
+    <dynamics damping="0.1" friction="0.0"/>
+    <limit effort="17" lower="-1.5708" upper="1.4" velocity="33"/>
+  </joint>
+  <link name="R_shoulder_yaw_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 -0.062"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/hector_arm/ShoulderYaw_R.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin rpy="1.5707963267948966 0 0" xyz="0 0.021 0"/>
+      <geometry>
+        <cylinder length="0.08" radius="0.041"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.00071 -0.02838 0.04835"/>
+      <mass value="0.4356"/>
+      <inertia ixx="0.00035" ixy="-0.0" ixz="2e-05" iyy="0.00043" iyz="-0.00063" izz="0.00027"/>
+    </inertial>
+  </link>
+  <joint name="R_shoulder_pitch_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.0 -0.045 -0.018"/>
+    <parent link="R_shoulder_yaw_link"/>
+    <child link="R_shoulder_pitch_link"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0.1" friction="0.0"/>
+    <limit effort="17" lower="-3.14" upper="1.5708" velocity="33"/>
+  </joint>
+  <link name="R_shoulder_pitch_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/hector_arm/ShoulderPitch_R.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="gold"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 -0.125"/>
+      <geometry>
+        <box size="0.25 0.034 0.043"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="-0.0294 -0.04541 0.00089"/>
+      <mass value="0.432"/>
+      <inertia ixx="0.00042" ixy="2e-05" ixz="0.0" iyy="0.00027" iyz="-0.0" izz="0.00033"/>
+    </inertial>
+  </link>
+  <joint name="R_shoulder_roll_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="-0.0135 -0.045 0.0"/>
+    <parent link="R_shoulder_pitch_link"/>
+    <child link="R_shoulder_roll_link"/>
+    <axis xyz="1 0 0"/>
+    <dynamics damping="0.1" friction="0.0"/>
+    <limit effort="17" lower="-1.4" upper="0.1" velocity="33"/>
+  </joint>
+  <link name="R_shoulder_roll_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/hector_arm/UpperArmRoll_R.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0.04 0 -0.125"/>
+      <geometry>
+        <box size="0.25 0.034 0.043"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.04492 -0.01006 -0.03218"/>
+      <mass value="0.66484"/>
+      <inertia ixx="0.00318" ixy="-1e-05" ixz="0.0" iyy="0.00325" iyz="-0.00037" izz="0.00049"/>
+    </inertial>
+  </link>
+  <joint name="R_elbow_joint" type="revolute">
+    <origin rpy="0 0 0" xyz="0.04 0.0 -0.20"/>
+    <parent link="R_shoulder_roll_link"/>
+    <child link="R_elbow_link"/>
+    <axis xyz="0 1 0"/>
+    <dynamics damping="0.1" friction="0.0"/>
+    <limit effort="24.09" lower="-2.78" upper="2.63" velocity="23.29"/>
+  </joint>
+  <link name="R_elbow_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <mesh filename="file:///home/obot/hector_ws/install/hector_assets/share/hector_assets/models/meshes/hector_arm/ForeArmPitch.stl" scale="1 1 1"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <collision>
+      <origin rpy="0 1.5707963267948966 0" xyz="0 0 -0.125"/>
+      <geometry>
+        <box size="0.25 0.016 0.016"/>
+      </geometry>
+    </collision>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.0 8e-05 -0.11722"/>
+      <mass value="0.1578"/>
+      <inertia ixx="0.00129" ixy="0.0" ixz="0.0" iyy="0.0013" iyz="0.0" izz="2e-05"/>
+    </inertial>
+  </link>
+  <joint name="R_EE_joint" type="fixed">
+    <origin rpy="0 0 0" xyz="0.0 0.0 -0.20"/>
+    <parent link="R_elbow_link"/>
+    <child link="R_EE_link"/>
+  </joint>
+  <link name="R_EE_link">
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+        <box size="0.02 0.02 0.02"/>
+      </geometry>
+      <material name="grey"/>
+    </visual>
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <mass value="0.0001"/>
+      <inertia ixx="0.0000001" ixy="0.0000001" ixz="0.0000001" iyy="0.0000001" iyz="0.0000001" izz="0.0000001"/>
+    </inertial>
+  </link>
+  <ros2_control name="MotorHardware" type="system">
+    <hardware>
+      <plugin>gazebo_ros2_control/GazeboSystem</plugin>
+    </hardware>
+    <joint name="L_hip_yaw_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="L_hip_roll_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="L_hip_pitch_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="L_knee_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="L_ankle_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="R_hip_yaw_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="R_hip_roll_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="R_hip_pitch_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="R_knee_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="R_ankle_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="L_shoulder_yaw_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="L_shoulder_pitch_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="L_shoulder_roll_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="L_elbow_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="R_shoulder_yaw_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="R_shoulder_pitch_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="R_shoulder_roll_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+    <joint name="R_elbow_joint">
+      <command_interface name="effort">
+        <param name="min">-33.5</param>
+        <param name="max">33.5</param>
+      </command_interface>
+      <state_interface name="position">
+        <param name="initial_value">0.0</param>
+      </state_interface>
+      <state_interface name="velocity"/>
+      <state_interface name="effort"/>
+    </joint>
+  </ros2_control>
+  <gazebo>
+    <plugin filename="libgazebo_ros2_control.so" name="gazebo_ros2_control">
+      <robot_sim_type>gazebo_ros2_control/GazeboSystem</robot_sim_type>
+      <parameters>/home/obot/hector_ws/install/hector_assets/share/hector_assets/config/hector_controller_config.yaml</parameters>
+    </plugin>
+  </gazebo>
+  <!-- <gazebo>
+      <plugin name="joint_state_publisher" filename="libgazebo_ros_joint_state_publisher.so">
+        <robotNamespace>/</robotNamespace>
+        <joint_name>L_hip_roll_joint</joint_name>
+      </plugin>
+    </gazebo>     -->
+</robot>

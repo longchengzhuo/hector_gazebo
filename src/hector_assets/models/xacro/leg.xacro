@@ -1,0 +1,344 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <!-- <xacro:include filename="$(find hector_assets)/models/xacro/transmission.xacro"/> -->
+
+    <xacro:macro name="leg" params="name mirror mirror_dae  *origin">
+
+        <joint name="${name}_hip_yaw_joint" type="revolute">
+            <xacro:insert_block name="origin"/>
+            <parent link="trunk"/>
+            <child link="${name}_hip_yaw_link"/>
+            <axis xyz="0 0 1"/>
+            <dynamics damping="${damping}" friction="${friction}"/>
+            <xacro:if value="${(mirror_dae == True)}">
+                <limit effort="${hip_yaw_torque_max}" velocity="${hip_yaw_velocity_max}" lower="${hip_yaw_min*PI/180.0}" upper="${hip_yaw_max*PI/180.0}"/>
+            </xacro:if>
+            <xacro:if value="${(mirror_dae == False)}">
+                <limit effort="${hip_yaw_torque_max}" velocity="${hip_yaw_velocity_max}" lower="${-hip_yaw_max*PI/180.0}" upper="${-hip_yaw_min*PI/180.0}"/>
+            </xacro:if>
+        </joint>
+
+        <link name="${name}_hip_yaw_link">
+            <visual>
+                <origin rpy="0 0 0" xyz="0 0 0.02"/>
+                <xacro:if value="${(mirror_dae == True)}">
+                    <geometry>
+                        <mesh filename="file://$(find hector_assets)/models/meshes/R_hip_yaw.STL" scale="1 1 1"/>
+                    </geometry>
+                </xacro:if>
+                <xacro:if value="${(mirror_dae == False)}">
+                   <geometry>
+                        <mesh filename="file://$(find hector_assets)/models/meshes/L_hip_yaw.STL" scale="1 1 1"/>
+                    </geometry>
+                </xacro:if>
+                <material name="grey"/>
+            </visual>
+            <collision>
+                <origin rpy="0 0 0" xyz="${hip_yaw_x} ${hip_yaw_y} ${hip_yaw_z}"/>
+                <geometry>
+                    <box size="${hip_yaw_length} ${hip_yaw_width} ${hip_yaw_height}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <origin rpy="0 0 0" xyz="${hip_yaw_com_x} ${hip_yaw_com_y} ${hip_yaw_com_z}"/>
+                <mass value="${hip_yaw_mass}"/>
+                <inertia
+                    ixx="${hip_yaw_ixx}" ixy="${hip_yaw_ixy}" ixz="${hip_yaw_ixz}"
+                    iyy="${hip_yaw_iyy}" iyz="${hip_yaw_iyz}"
+                    izz="${hip_yaw_izz}"/>
+            </inertial>
+        </link>
+
+        <!--this link is only for motor mass & colllision-->
+        <joint name="${name}_hip_yaw_trans_joint" type="fixed">
+            <origin rpy="0 0 0" xyz="${hip_yaw_trans_offset_x} ${hip_yaw_trans_offset_y*mirror} ${hip_yaw_trans_offset_z}"/>
+            <parent link="${name}_hip_yaw_link"/>
+            <child link="${name}_hip_yaw_trans_link"/>
+        </joint> 
+
+        <link name="${name}_hip_yaw_trans_link">
+            <collision>
+                <origin rpy="0 ${PI/2} 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="${hip_yaw_trans_length}" radius="${hip_yaw_trans_radius}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <origin rpy="0 0 0" xyz="0 0 0"/>
+                <mass value="${hip_yaw_trans_mass}"/>
+                <inertia
+                    ixx="${hip_yaw_trans_ixx}" ixy="${hip_yaw_trans_ixy}" ixz="${hip_yaw_trans_ixz}"
+                    iyy="${hip_yaw_trans_iyy}" iyz="${hip_yaw_trans_iyz}"
+                    izz="${hip_yaw_trans_izz}"/>       
+            </inertial>
+        </link>
+
+         <joint name="${name}_hip_roll_joint" type="revolute">
+            <origin rpy="0 0 0" xyz="${hip_roll_offset_x} ${hip_roll_offset_y*mirror} ${-hip_roll_offset_z}"/>
+            <parent link="${name}_hip_yaw_link"/>
+            <child link="${name}_hip_roll_link"/>
+            <axis xyz="1 0 0"/>
+            <dynamics damping="${damping}" friction="${friction}"/>
+            <xacro:if value="${(mirror_dae == True)}">
+                <limit effort="${hip_roll_torque_max}" velocity="${hip_roll_velocity_max}" lower="${hip_roll_min*PI/180.0}" upper="${hip_roll_max*PI/180.0}"/>
+            </xacro:if>
+            <xacro:if value="${(mirror_dae == False)}">
+                <limit effort="${hip_roll_torque_max}" velocity="${hip_roll_velocity_max}" lower="${-hip_roll_max*PI/180.0}" upper="${-hip_roll_min*PI/180.0}"/>
+            </xacro:if>
+        </joint>
+
+        <link name="${name}_hip_roll_link">
+            <visual>
+                <origin rpy="0 0 0" xyz="0 0 0"/>
+                <xacro:if value="${(mirror_dae == True)}">
+                    <geometry>
+                        <mesh filename="file://$(find hector_assets)/models/meshes/R_hip_roll.STL" scale="1 1 1"/>
+                    </geometry>
+                </xacro:if>
+                <xacro:if value="${(mirror_dae == False)}">
+                   <geometry>
+                        <mesh filename="file://$(find hector_assets)/models/meshes/L_hip_roll.STL" scale="1 1 1"/>
+                    </geometry>
+                </xacro:if>
+                <material name="gold"/>
+            </visual>
+            <collision>
+                <origin rpy="0 0 0" xyz="-0.1 0 0"/>
+                <geometry>
+                    <box size="${hip_roll_length} ${hip_roll_width} ${hip_roll_height}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <origin rpy="0 0 0" xyz="-0.033217 -0.010231 0"/>
+                <mass value="${hip_roll_mass}"/>
+                <inertia
+                    ixx="${hip_roll_ixx}" ixy="${hip_roll_ixy}" ixz="${hip_roll_ixz}"
+                    iyy="${hip_roll_iyy}" iyz="${hip_roll_iyz}"
+                    izz="${hip_roll_izz}"/>       
+            </inertial>
+        </link>
+     
+        <!--this link is only for collision-->
+        <joint name="${name}_hip_roll_trans_joint" type="fixed">
+            <origin rpy="0 0 0" xyz="${hip_roll_trans_offset_x} ${hip_roll_trans_offset_y*mirror} ${hip_roll_trans_offset_z}"/>
+            <parent link="${name}_hip_roll_link"/>
+            <child link="${name}_hip_roll_trans_link"/>
+        </joint> 
+
+        <link name="${name}_hip_roll_trans_link">
+            <collision>
+                <origin rpy="${-PI/2} 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="${hip_roll_trans_length}" radius="${hip_roll_trans_radius}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <origin rpy="${-PI/2} 0 0" xyz="0 0 0"/>
+                <mass value="${hip_roll_trans_mass}"/>
+                <inertia
+                    ixx="${hip_roll_trans_ixx}" ixy="${hip_roll_trans_ixy}" ixz="${hip_roll_trans_ixz}"
+                    iyy="${hip_roll_trans_iyy}" iyz="${hip_roll_trans_iyz}"
+                    izz="${hip_roll_trans_izz}"/>       
+            </inertial>
+        </link>
+        
+        <joint name="${name}_hip_pitch_joint" type="revolute">
+            <xacro:if value="${mirror_dae == True}">
+                <origin rpy="0 ${0.25*PI} 0" xyz="${hip_pitch_offset_x} ${mirror*hip_pitch_offset_y} ${hip_pitch_offset_z}"/>
+            </xacro:if>
+            <xacro:if value="${mirror_dae == False}">
+                <origin rpy="0 ${0.25*PI} 0" xyz="${hip_pitch_offset_x} ${hip_pitch_offset_y} ${hip_pitch_offset_z}"/>
+            </xacro:if>
+            <parent link="${name}_hip_roll_link"/>
+            <child link="${name}_hip_pitch_link"/>
+            <axis xyz="0 1 0"/>
+            <joint_properties damping="${damping}" friction="${friction}"/>
+            <!-- <limit effort="${hip_pitch_torque_max}" velocity="${hip_pitch_velocity_max}"/> -->
+            <limit effort="${hip_pitch_torque_max}" velocity="${hip_pitch_velocity_max}" lower="${hip_pitch_min}" upper="${hip_pitch_max}"/>
+        </joint>
+
+        <link name="${name}_hip_pitch_link">
+            <visual>
+                <origin rpy="0 0 0" xyz="0 0 0"/>
+                <xacro:if value="${(mirror_dae == True)}">
+                    <geometry>
+                        <mesh filename="file://$(find hector_assets)/models/meshes/hip_pitch_combined_R2.stl" scale="1 1 1"/>
+                    </geometry>
+                </xacro:if>
+                <xacro:if value="${(mirror_dae == False)}">
+                   <geometry>
+                        <mesh filename="file://$(find hector_assets)/models/meshes/hip_pitch_combined_L2.stl" scale="1 1 1"/>
+                    </geometry>
+                </xacro:if>
+                <material name="grey"/>
+            </visual>
+            <collision>
+                <origin rpy="0 0 0" xyz="${hip_pitch_x} ${hip_pitch_y*mirror} ${hip_pitch_z}"/>
+                <geometry>
+                    <box size="${hip_pitch_length} ${hip_pitch_width} ${hip_pitch_height}"/>
+                </geometry>
+            </collision>
+             <inertial>
+                <origin rpy="0 0 0" xyz="${hip_pitch_com_x} ${hip_pitch_com_y*mirror} ${hip_pitch_com_z}"/>
+                <mass value="${hip_pitch_mass}"/>
+                <inertia
+                    ixx="${hip_pitch_ixx}" ixy="${hip_pitch_ixy}" ixz="${hip_pitch_ixz}"
+                    iyy="${hip_pitch_iyy}" iyz="${hip_pitch_iyz}"
+                    izz="${hip_pitch_izz}"/>       
+            </inertial>
+        </link>
+
+        <!--this link is only for collision-->
+        <joint name="${name}_hip_pitch1_trans_joint" type="fixed">
+            <origin rpy="0 0 0" xyz="${hip_pitch1_trans_offset_x} ${hip_pitch1_trans_offset_y*mirror} ${hip_pitch1_trans_offset_z}"/>
+            <parent link="${name}_hip_pitch_link"/>
+            <child link="${name}_hip_pitch1_trans_link"/>
+        </joint> 
+
+        <link name="${name}_hip_pitch1_trans_link">
+            <collision>
+                <origin rpy="${-PI/2} 0 0" xyz="0 0 0"/>
+                <geometry>
+                    <cylinder length="${hip_pitch1_trans_length}" radius="${hip_pitch1_trans_radius}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <origin rpy="${-PI/2} 0 0" xyz="0 0 0"/>
+                <mass value="${hip_pitch1_trans_mass}"/>
+                <inertia
+                    ixx="${hip_pitch1_trans_ixx}" ixy="${hip_pitch1_trans_ixy}" ixz="${hip_pitch1_trans_ixz}"
+                    iyy="${hip_pitch1_trans_iyy}" iyz="${hip_pitch1_trans_iyz}"
+                    izz="${hip_pitch1_trans_izz}"/>       
+            </inertial>
+        </link>
+
+        <!--this link is only for collision-->
+        <joint name="${name}_hip_pitch2_trans_joint" type="fixed">
+            <origin rpy="0 0 0" xyz="${hip_pitch2_trans_offset_x} ${hip_pitch2_trans_offset_y*mirror} ${hip_pitch2_trans_offset_z}"/>
+            <parent link="${name}_hip_pitch_link"/>
+            <child link="${name}_hip_pitch2_trans_link"/>
+        </joint>  
+
+        <link name="${name}_hip_pitch2_trans_link">
+            <collision>
+                <origin rpy="${-PI/2} 0 0" xyz="0 ${0.0725*mirror} 0"/>
+                <geometry>
+                    <cylinder length="${hip_pitch2_trans_length}" radius="${hip_pitch2_trans_radius}"/>
+                </geometry>
+            </collision>
+            <inertial>
+                <origin rpy="${-PI/2} 0 0" xyz="0 ${0.0725*mirror} 0"/>
+                <mass value="${hip_pitch2_trans_mass}"/>
+                <inertia
+                    ixx="${hip_pitch2_trans_ixx}" ixy="${hip_pitch2_trans_ixy}" ixz="${hip_pitch2_trans_ixz}"
+                    iyy="${hip_pitch2_trans_iyy}" iyz="${hip_pitch2_trans_iyz}"
+                    izz="${hip_pitch2_trans_izz}"/>       
+            </inertial>
+        </link>
+
+        <joint name="${name}_knee_joint" type="revolute">
+            <origin rpy="0 ${-0.5*PI} 0" xyz="${knee_offset_x} ${0} ${-knee_offset_z}"/>
+            <parent link="${name}_hip_pitch_link"/>
+            <child link="${name}_knee_link"/>
+            <axis xyz="0 1 0"/>
+            <joint_properties damping="${damping}" friction="${friction}"/>
+            <limit effort="${knee_torque_max}" velocity="${knee_velocity_max}" lower="${knee_min}" upper="${knee_max}"/>
+        </joint>
+
+        <link name="${name}_knee_link">
+            <visual>
+                <origin rpy="0 0 0" xyz="0 0 0"/>
+                <xacro:if value="${(mirror_dae == True)}">
+                    <geometry>
+                        <mesh filename="file://$(find hector_assets)/models/meshes/knee_combined_R.stl" scale="1 1 1"/>
+                    </geometry>
+                </xacro:if>
+                <xacro:if value="${(mirror_dae == False)}">
+                   <geometry>
+                        <mesh filename="file://$(find hector_assets)/models/meshes/knee_combined_L.stl" scale="1 1 1"/>
+                    </geometry>
+                </xacro:if>
+                <material name="grey"/>
+            </visual>
+            <collision>
+                <origin rpy="0 0 0" xyz="${knee_x} ${knee_y*mirror} ${knee_z}"/>
+                <geometry>
+                    <cylinder length="${knee_length}" radius="${knee_radius}"/>
+                </geometry>      
+            </collision>
+            <inertial>
+                <origin rpy="0 0 0" xyz="${knee_com_x} ${knee_com_y*mirror} ${knee_com_z}"/>
+                <mass value="${knee_mass}"/>
+                <inertia
+                    ixx="${knee_ixx}" ixy="${knee_ixy}" ixz="${knee_ixz}"
+                    iyy="${knee_iyy}" iyz="${knee_iyz}"
+                    izz="${knee_izz}"/>       
+            </inertial>
+        </link>
+
+        <joint name="${name}_ankle_joint" type="revolute">
+            <origin rpy="0 ${0.25*PI} 0" xyz="${ankle_offset_x} ${ankle_offset_y*0} ${ankle_offset_z}"/>
+            <parent link="${name}_knee_link"/>
+            <child link="${name}_ankle_link"/>
+            <axis xyz="0 1 0"/>
+            <joint_properties damping="${damping}" friction="${friction}"/>
+            <limit effort="${ankle_torque_max}" velocity="${ankle_velocity_max}" lower="${ankle_min}" upper="${ankle_max}"/>
+        </joint>
+
+        <link name="${name}_ankle_link">
+            <visual>
+                <origin rpy="0 0 0" xyz="0 0 0"/>
+                <xacro:if value="${(mirror_dae == True)}">
+                    <geometry>
+                        <mesh filename="file://$(find hector_assets)/models/meshes/foot_R2.stl" scale="1 1 1"/>
+                    </geometry>
+                </xacro:if>
+                <xacro:if value="${(mirror_dae == False)}">
+                   <geometry>
+                        <mesh filename="file://$(find hector_assets)/models/meshes/foot_L2.stl" scale="1 1 1"/>
+                    </geometry>
+                </xacro:if>
+                <material name="grey"/>
+            </visual>
+            <collision>
+                <origin rpy="0 0 0" xyz="${ankle_x} ${ankle_y*mirror} ${ankle_z}"/>
+                <geometry>
+                     <box size="${ankle_length} ${ankle_width} ${ankle_height}"/>
+                </geometry>      
+            </collision>
+            <inertial>
+                <origin rpy="0 0 0" xyz="${ankle_com_x} ${ankle_com_y*mirror} ${ankle_com_z}"/>
+                <mass value="${ankle_mass}"/>
+                <inertia
+                    ixx="${ankle_ixx}" ixy="${ankle_ixy}" ixz="${ankle_ixz}"
+                    iyy="${ankle_iyy}" iyz="${ankle_iyz}"
+                    izz="${ankle_izz}"/>       
+            </inertial>
+        </link>
+        <joint name="${name}_leg_EE_joint" type="fixed">
+            <origin rpy="0 0 0" xyz="0.0 ${ankle_y*mirror} -0.04"/>
+            <parent link="${name}_ankle_link"/>
+            <child link="${name}_leg_EE_link"/>
+        </joint>
+        <link name="${name}_leg_EE_link">
+            <visual>
+            <origin rpy="0 0 0" xyz="0 0 0"/>
+            <geometry>
+                <sphere radius="0.01"/>
+            </geometry>
+            <material name="grey"/>
+            </visual>
+            <inertial>
+                <origin rpy="0 0 0" xyz="0 0 0"/>
+                <mass value="0.0001"/>
+                <inertia
+                    ixx="0.0000001" ixy="0.0000001" ixz="0.0000001"
+                    iyy="0.0000001" iyz="0.0000001"
+                    izz="0.0000001"/>       
+            </inertial>
+        </link>              
+        <!-- <xacro:leg_transmission name="${name}"/> -->
+    </xacro:macro>
+</robot>

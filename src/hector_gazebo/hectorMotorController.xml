@@ -1,0 +1,8 @@
+<library path="hector_motor_controller">
+  <class name="hector_motor_controller/HectorMotorController"
+         type="hector_motor_controller::HectorMotorController" base_class_type="controller_interface::ControllerInterface">
+  <description>
+    hector_motor_controller ros2_control controller.
+  </description>
+  </class>
+</library>
