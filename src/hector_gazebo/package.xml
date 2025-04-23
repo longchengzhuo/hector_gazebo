@@ -1,28 +1,17 @@
 <?xml version="1.0"?>
 <?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
 <package format="3">
-  <name>hector_gazebo</name>
-  <version>0.0.0</version>
-  <description>TODO: Package description</description>
-  <maintainer email="omarkolt@hotmail.com">obot</maintainer>
-  <license>TODO: License declaration</license>
+  <name>hector_gazebo</name> <version>0.0.0</version>
+  <description>Launch files for Hector robot simulation in Gazebo</description> <maintainer email="user@todo.todo">Your Name</maintainer> <license>Apache-2.0</license> <buildtool_depend>ament_cmake</buildtool_depend>
 
-  <buildtool_depend>ament_cmake</buildtool_depend>
-
-  <depend>rclcpp</depend>
-  <depend>rclpy</depend>
-  <depend>sensor_msgs</depend>
-  <depend>std_msgs</depend>
-  <depend>control_msgs</depend>
-  <depend>geometry_msgs</depend>
-  <depend>rosidl_default_generators</depend>
-  <depend>rosidl_default_runtime</depend>
-  <depend>controller_interface</depend>
-  <depend>hardware_interface</depend>
-  <depend>pluginlib</depend>
-  <depend>rclcpp_lifecycle</depend>
-  <depend>realtime_tools</depend>
-  <depend>example_interfaces</depend>
+  <exec_depend>launch</exec_depend>
+  <exec_depend>ament_index_python</exec_depend>
+  <exec_depend>launch_ros</exec_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>hector_assets</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>controller_manager</exec_depend>
+  <exec_depend>python3-xacro</exec_depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>
