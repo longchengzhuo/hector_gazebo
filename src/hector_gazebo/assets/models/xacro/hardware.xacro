@@ -244,6 +244,10 @@
       <joint_name>R_shoulder_pitch_joint</joint_name>
       <joint_name>R_shoulder_roll_joint</joint_name>
       <joint_name>R_elbow_joint</joint_name>
+      <imu_sensor_name>imu_sensor</imu_sensor_name>
+      <left_toe_contact_sensor_name>left_foot_contact</left_toe_contact_sensor_name>
+      <right_toe_contact_sensor_name>right_foot_contact</right_toe_contact_sensor_name>
+
     </plugin>
   </gazebo>
 

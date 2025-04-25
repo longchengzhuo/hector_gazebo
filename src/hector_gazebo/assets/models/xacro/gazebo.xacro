@@ -21,7 +21,7 @@
             <material>Gazebo/Gold</material>
           </plot>
         </plugin>
-      </gazebo>
+    </gazebo>
       <!-- <gazebo>
         <plugin name="3dplot" filename="libLinkPlot3DPlugin.so">
           <frequency>100</frequency>
