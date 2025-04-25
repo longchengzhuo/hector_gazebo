@@ -61,31 +61,12 @@ def generate_launch_description():
         launch_arguments=[('world',world_path),('verbose','true')]
     )
 
-    # Load joint state controller
-    load_joint_state_controller = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['joint_state_broadcaster'], # 将要加载并启动的控制器名称放在 arguments 列表里
-        output='screen'
-    )
 
-    controller_spawner_node = Node(
-        package='controller_manager',
-        executable='spawner',
-        arguments=['hector_controller'],
-        output='screen'
-    )
 
 
     return  LaunchDescription([
         launch_gazebo,
         robot_state_publisher_node,
         spawn_robot,
-        RegisterEventHandler(
-            event_handler=OnProcessExit(
-                target_action=spawn_robot,
-                on_exit=[load_joint_state_controller],
-            )
-        ),
-        controller_spawner_node,
+
     ])
