@@ -256,17 +256,22 @@
     <xacro:property name="shoulder_yaw_length" value="0.08"/>    
     
     <!-- inertial -->
-    <!-- <xacro:property name="shoulder_yaw_mass" value="1.096"/> -->
     <xacro:property name="shoulder_yaw_mass" value="0.4356"/>
+
     <xacro:property name="shoulder_yaw_com_x" value="0.00071"/>
     <xacro:property name="shoulder_yaw_com_y" value="0.02838"/>
     <xacro:property name="shoulder_yaw_com_z" value="0.04835"/>
-    <xacro:property name="shoulder_yaw_ixx" value="0.00035"/>
-    <xacro:property name="shoulder_yaw_ixy" value="0.0"/>
-    <xacro:property name="shoulder_yaw_ixz" value="0.00002"/>
-    <xacro:property name="shoulder_yaw_iyy" value="0.00043"/>
-    <xacro:property name="shoulder_yaw_iyz" value="0.00063"/>
-    <xacro:property name="shoulder_yaw_izz" value="0.00027"/>  
+
+    <xacro:property name="shoulder_yaw_rpy_r" value="0.0"/>
+    <xacro:property name="shoulder_yaw_rpy_p" value="0.0"/>
+    <xacro:property name="shoulder_yaw_rpy_y" value="1.570796"/>
+    <xacro:property name="shoulder_yaw_ixx" value="0.00043"/>
+    <xacro:property name="shoulder_yaw_iyy" value="0.00035"/>
+    <xacro:property name="shoulder_yaw_izz" value="0.00027"/>
+
+
+
+
 
 
     <!-- shoulder_pitch -->

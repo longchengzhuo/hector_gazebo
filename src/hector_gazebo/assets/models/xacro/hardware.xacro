@@ -224,31 +224,31 @@
                                          
     </ros2_control>
 
-  <gazebo>
-    <plugin name="hector_gazebo_controller" filename="libhector_gazebo_plugin.so">
-      <joint_name>L_hip_yaw_joint</joint_name>
-      <joint_name>L_hip_roll_joint</joint_name>
-      <joint_name>L_hip_pitch_joint</joint_name>
-      <joint_name>L_knee_joint</joint_name>
-      <joint_name>L_ankle_joint</joint_name>
-      <joint_name>R_hip_yaw_joint</joint_name>
-      <joint_name>R_hip_roll_joint</joint_name>
-      <joint_name>R_hip_pitch_joint</joint_name>
-      <joint_name>R_knee_joint</joint_name>
-      <joint_name>R_ankle_joint</joint_name>
-      <joint_name>L_shoulder_yaw_joint</joint_name>
-      <joint_name>L_shoulder_pitch_joint</joint_name>
-      <joint_name>L_shoulder_roll_joint</joint_name>
-      <joint_name>L_elbow_joint</joint_name>
-      <joint_name>R_shoulder_yaw_joint</joint_name>
-      <joint_name>R_shoulder_pitch_joint</joint_name>
-      <joint_name>R_shoulder_roll_joint</joint_name>
-      <joint_name>R_elbow_joint</joint_name>
-      <imu_sensor_name>imu_sensor</imu_sensor_name>
-      <left_toe_contact_sensor_name>left_foot_contact</left_toe_contact_sensor_name>
-      <right_toe_contact_sensor_name>right_foot_contact</right_toe_contact_sensor_name>
+<!--  <gazebo>-->
+<!--    <plugin name="hector_gazebo_controller" filename="libhector_gazebo_plugin.so">-->
+<!--      <joint_name>L_hip_yaw_joint</joint_name>-->
+<!--      <joint_name>L_hip_roll_joint</joint_name>-->
+<!--      <joint_name>L_hip_pitch_joint</joint_name>-->
+<!--      <joint_name>L_knee_joint</joint_name>-->
+<!--      <joint_name>L_ankle_joint</joint_name>-->
+<!--      <joint_name>R_hip_yaw_joint</joint_name>-->
+<!--      <joint_name>R_hip_roll_joint</joint_name>-->
+<!--      <joint_name>R_hip_pitch_joint</joint_name>-->
+<!--      <joint_name>R_knee_joint</joint_name>-->
+<!--      <joint_name>R_ankle_joint</joint_name>-->
+<!--      <joint_name>L_shoulder_yaw_joint</joint_name>-->
+<!--      <joint_name>L_shoulder_pitch_joint</joint_name>-->
+<!--      <joint_name>L_shoulder_roll_joint</joint_name>-->
+<!--      <joint_name>L_elbow_joint</joint_name>-->
+<!--      <joint_name>R_shoulder_yaw_joint</joint_name>-->
+<!--      <joint_name>R_shoulder_pitch_joint</joint_name>-->
+<!--      <joint_name>R_shoulder_roll_joint</joint_name>-->
+<!--      <joint_name>R_elbow_joint</joint_name>-->
+<!--      <imu_sensor_name>imu_sensor</imu_sensor_name>-->
+<!--      <left_toe_contact_sensor_name>left_foot_contact</left_toe_contact_sensor_name>-->
+<!--      <right_toe_contact_sensor_name>right_foot_contact</right_toe_contact_sensor_name>-->
 
-    </plugin>
-  </gazebo>
+<!--    </plugin>-->
+<!--  </gazebo>-->
 
 </robot> 
