@@ -341,13 +341,13 @@ namespace hector_gazebo_plugins {
     void HectorGazeboFortressPlugin::ApplyControl(ignition::gazebo::EntityComponentManager &_ecm)
     {
         std::lock_guard<std::mutex> lock(cmdMutex_);
-
+        const double test_torque = 0.0005;
         if (!lastRosCmd_.has_value()) {
             for (size_t i = 0; i < jointEntities_.size(); ++i) {
                 auto forceComp = _ecm.Component<ignition::gazebo::components::JointForceCmd>(jointEntities_[i]);
                 if (forceComp) {
                     if (forceComp->Data().empty()) forceComp->Data().resize(1);
-                    forceComp->Data()[0] = 0.0;
+                    forceComp->Data()[0] = test_torque;
                     _ecm.SetChanged(jointEntities_[i], ignition::gazebo::components::JointForceCmd::typeId);
                 }
             }

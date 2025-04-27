@@ -32,7 +32,5 @@
     </xacro:arm>    
     <xacro:include filename="$(find hector_gazebo)/assets/models/xacro/gazebo.xacro"/>
 
-    <!-- Include the ros2_control plugins -->
-<!--    <xacro:include filename="$(find hector_gazebo)/assets/models/xacro/hardware.xacro"/>-->
     
 </robot>
