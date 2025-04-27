@@ -1,11 +1,44 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <gazebo reference="base_link">
+        <plugin
+                filename="libhector_gazebo_fortress_plugin.so"
+                name="hector_gazebo_plugins::HectorGazeboFortressPlugin">
+
+            <joint_name>L_hip_yaw_joint</joint_name>
+            <joint_name>L_hip_roll_joint</joint_name>
+            <joint_name>L_hip_pitch_joint</joint_name>
+            <joint_name>L_knee_joint</joint_name>
+            <joint_name>L_ankle_joint</joint_name>
+            <joint_name>R_hip_yaw_joint</joint_name>
+            <joint_name>R_hip_roll_joint</joint_name>
+            <joint_name>R_hip_pitch_joint</joint_name>
+            <joint_name>R_knee_joint</joint_name>
+            <joint_name>R_ankle_joint</joint_name>
+            <joint_name>L_shoulder_yaw_joint</joint_name>
+            <joint_name>L_shoulder_pitch_joint</joint_name>
+            <joint_name>L_shoulder_roll_joint</joint_name>
+            <joint_name>L_elbow_joint</joint_name>
+            <joint_name>R_shoulder_yaw_joint</joint_name>
+            <joint_name>R_shoulder_pitch_joint</joint_name>
+            <joint_name>R_shoulder_roll_joint</joint_name>
+            <joint_name>R_elbow_joint</joint_name>
+
+            <base_link_name>base_link</base_link_name>
+
+            <ign_imu_topic>/imu</ign_imu_topic>
+            <ign_left_contact_topic>/l_contact</ign_left_contact_topic>
+            <ign_right_contact_topic>/r_contact</ign_right_contact_topic>
+
+        </plugin>
+    </gazebo>
 
     <gazebo reference="imu_link">
         <sensor name="imu_sensor" type="imu">
             <always_on>true</always_on>
             <update_rate>1000</update_rate>
             <visualize>true</visualize>
+            <topic>/imu</topic>
             <imu>
                 <angular_velocity>
                     <x>
@@ -54,7 +87,35 @@
                     </z>
                 </linear_acceleration>
             </imu>
-            <plugin name="gz::sim::systems::Imu" filename="gz-sim-imu-system"/>
+            <plugin filename="libignition-gazebo-imu-system.so"
+                    name="ignition::gazebo::systems::Imu">
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="L_ankle_link">
+        <sensor name="left_foot_contact" type="contact">
+            <always_on>true</always_on>
+            <update_rate>50</update_rate>
+            <contact>
+                <collision>L_foot_collision</collision>
+            </contact>
+            <topic>/l_contact</topic>
+            <plugin filename="libignition-gazebo-contact-system.so" name="ignition::gazebo::systems::Contact">
+            </plugin>
+        </sensor>
+    </gazebo>
+
+    <gazebo reference="R_ankle_link">
+        <sensor name="right_foot_contact" type="contact">
+            <always_on>true</always_on>
+            <update_rate>50</update_rate>
+            <contact>
+                <collision>R_foot_collision</collision>
+            </contact>
+            <topic>/r_contact</topic>
+            <plugin filename="libignition-gazebo-contact-system.so" name="ignition::gazebo::systems::Contact">
+            </plugin>
         </sensor>
     </gazebo>
 

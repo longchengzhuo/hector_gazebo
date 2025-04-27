@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+    <name>hector_gazebo_fortress_plugin</name>
+    <version>0.1.0</version>
+    <description>Gazebo Fortress System plugin to control Hector robot via ROS 2, replicating old Gazebo 11 plugin functionality.</description>
+    <maintainer email="you@example.com">Your Name</maintainer>
+    <license>Apache License 2.0</license>
+
+    <buildtool_depend>ament_cmake</buildtool_depend>
+
+    <depend>rclcpp</depend>
+    <depend>laser_interfaces</depend>
+
+    <depend>ignition-gazebo6</depend>       <depend>ignition-plugin1</depend>       <depend>ignition-transport11</depend>   <depend>ignition-msgs8</depend>         <depend>ignition-math6</depend>         <build_depend>libignition-gazebo6-dev</build_depend>      <build_depend>libignition-transport11-dev</build_depend>  <build_depend>libignition-plugin1-dev</build_depend>      <build_depend>libignition-msgs8-dev</build_depend>        <build_depend>libignition-math6-dev</build_depend>        <test_depend>ament_lint_auto</test_depend>
+    <test_depend>ament_lint_common</test_depend>
+
+    <export>
+        <build_type>ament_cmake</build_type>
+    </export>
+</package>

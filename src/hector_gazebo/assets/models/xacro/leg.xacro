@@ -2,8 +2,6 @@
 
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro">
 
-    <!-- <xacro:include filename="$(find hector_gazebo)/assets/models/xacro/transmission.xacro"/> -->
-
     <xacro:macro name="leg" params="name mirror mirror_dae  *origin">
 
         <joint name="${name}_hip_yaw_joint" type="revolute">
@@ -302,7 +300,7 @@
                 </xacro:if>
                 <material name="grey"/>
             </visual>
-            <collision>
+            <collision name="${name}_foot_collision">
                 <origin rpy="0 0 0" xyz="${ankle_x} ${ankle_y*mirror} ${ankle_z}"/>
                 <geometry>
                      <box size="${ankle_length} ${ankle_width} ${ankle_height}"/>
