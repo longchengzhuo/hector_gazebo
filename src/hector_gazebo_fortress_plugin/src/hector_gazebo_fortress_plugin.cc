@@ -6,16 +6,14 @@
 #include <ignition/gazebo/components/Pose.hh>
 #include <ignition/gazebo/components/LinearVelocity.hh>
 #include <ignition/gazebo/components/AngularVelocity.hh>
-// #include <ignition/gazebo/components/JointPosition.hh>
-// #include <ignition/gazebo/components/JointVelocity.hh>
-#include <gz/sim/components/JointPosition.hh>
-#include <gz/sim/components/JointVelocity.hh>
+#include <ignition/gazebo/components/JointPosition.hh>
+#include <ignition/gazebo/components/JointVelocity.hh>
 #include <ignition/gazebo/components/JointForceCmd.hh>
 #include <ignition/gazebo/Model.hh>
 #include <ignition/gazebo/Util.hh>
 
 // *** NECESSARY FOR LOGGING ***
-#include <ignition/common/Console.hh> // <-- Ensure header is included and found
+#include <ignition/common/Console.hh>
 
 // ROS 2 Includes
 #include <rclcpp/rclcpp.hpp>
@@ -51,16 +49,11 @@ namespace hector_gazebo_plugins {
 
         this->modelEntity_ = _entity;
         ignition::gazebo::Model model(this->modelEntity_);
-
-        // --- 获取模型名称 ---
-        // model.Name() 返回 std::optional<std::string>
         std::optional<std::string> modelNameOpt = model.Name(_ecm);
-
-        // --- 从 std::optional<std::string> 安全地获取 std::string ---
-        // 如果 modelNameOpt 包含值，则使用该值；否则使用 "N/A"
-        std::string modelNameStr = modelNameOpt.value_or("N/A");
-
-        // --- 使用获取到的 modelNameStr 进行日志记录 ---
+        std::string modelNameStr = "N/A"; // Default value
+        if (modelNameOpt.has_value()) { // Check if the optional contains a value
+            modelNameStr = modelNameOpt.value(); // Get the value if it exists
+        }
         ignition::common::Console::warn << "Configure called for model: " << modelNameStr << std::endl;
 
         // --- 1. Parse SDF ---
@@ -229,7 +222,6 @@ namespace hector_gazebo_plugins {
         }
 
         this->rosInitialized_ = true;
-        // Corrected Logging Syntax (lowercase):
         ignition::common::Console::warn << "ROS Node '" << rosNode_->get_name() << "' initialized successfully." << std::endl;
     }
 
@@ -265,16 +257,26 @@ namespace hector_gazebo_plugins {
         }
         ignition::common::Console::warn << "Found base link '" << this->baseLinkName_ << "' with entity ID: " << this->baseLinkEntity_ << std::endl;
 
-        // Use lowercase 'warn' for warnings
+
+        if (!_ecm.HasEntity(this->baseLinkEntity_))
+        {
+             ignition::common::Console::err << "Base link entity " << this->baseLinkEntity_ << " seems invalid." << std::endl;
+             return false;
+        }
+        // Check for components needed in PostUpdate (reading state)
         if (!_ecm.Component<ignition::gazebo::components::WorldPose>(this->baseLinkEntity_)) {
-            ignition::common::Console::warn << "WorldPose component not found for base link '" << this->baseLinkName_ << "'. State reading might be incomplete." << std::endl;
+            ignition::common::Console::warn << "Creating WorldPose component for base link '" << this->baseLinkName_ << "' (might indicate physics system issue if missing)." << std::endl;
+            _ecm.CreateComponent(this->baseLinkEntity_, ignition::gazebo::components::WorldPose());
         }
         if (!_ecm.Component<ignition::gazebo::components::WorldLinearVelocity>(this->baseLinkEntity_)) {
-            ignition::common::Console::warn << "WorldLinearVelocity component not found for base link '" << this->baseLinkName_ << "'. State reading might be incomplete." << std::endl;
+            ignition::common::Console::warn << "Creating WorldLinearVelocity component for base link '" << this->baseLinkName_ << "'." << std::endl;
+             _ecm.CreateComponent(this->baseLinkEntity_, ignition::gazebo::components::WorldLinearVelocity());
         }
         if (!_ecm.Component<ignition::gazebo::components::WorldAngularVelocity>(this->baseLinkEntity_)) {
-            ignition::common::Console::warn << "WorldAngularVelocity component not found for base link '" << this->baseLinkName_ << "'. State reading might be incomplete." << std::endl;
+             ignition::common::Console::warn << "Creating WorldAngularVelocity component for base link '" << this->baseLinkName_ << "'." << std::endl;
+             _ecm.CreateComponent(this->baseLinkEntity_, ignition::gazebo::components::WorldAngularVelocity());
         }
+
 
         this->jointEntities_.clear();
         this->jointEntities_.reserve(this->numJoints_);
@@ -284,27 +286,38 @@ namespace hector_gazebo_plugins {
             if (jointEntity == ignition::gazebo::kNullEntity) {
                 ignition::common::Console::err << "Joint named '" << name << "' not found within model." << std::endl;
                 all_joints_found = false;
-                continue;
+                continue; // Skip this joint
             }
+            if (!_ecm.HasEntity(jointEntity))
+            {
+                ignition::common::Console::err << "Joint entity " << jointEntity << " for name '"<< name << "' seems invalid." << std::endl;
+                 all_joints_found = false;
+                 continue;
+            }
+
             this->jointEntities_.push_back(jointEntity);
             ignition::common::Console::warn << "Found joint '" << name << "' with entity ID: " << jointEntity << std::endl;
 
-            if (!_ecm.Component<ignition::gazebo::components::JointForceCmd>(jointEntity)) {
+            // Check for components needed in PreUpdate (applying control)
+             if (!_ecm.Component<ignition::gazebo::components::JointForceCmd>(jointEntity)) {
                 _ecm.CreateComponent(jointEntity, ignition::gazebo::components::JointForceCmd({0.0}));
                 ignition::common::Console::warn << "Created JointForceCmd component for joint '" << name << "'" << std::endl;
             }
-            // Use lowercase 'warn'
-            if (!_ecm.Component<gz::sim::components::JointPosition>(jointEntity)) {
-                ignition::common::Console::warn << "JointPosition component not found for joint '" << name << "'. State reading might fail." << std::endl;
+            // Check for components needed for calculations within ApplyControl (reading state *before* command)
+            if (!_ecm.Component<ignition::gazebo::components::JointPosition>(jointEntity)) {
+                 ignition::common::Console::warn << "Creating JointPosition component for joint '" << name << "'. State reading might fail initially." << std::endl;
+                 // Optionally create with a default value, though physics system should populate it
+                 _ecm.CreateComponent(jointEntity, ignition::gazebo::components::JointPosition({0.0}));
             }
-            if (!_ecm.Component<gz::sim::components::JointVelocity>(jointEntity)) {
-                ignition::common::Console::warn << "JointVelocity component not found for joint '" << name << "'. State reading might fail." << std::endl;
+            if (!_ecm.Component<ignition::gazebo::components::JointVelocity>(jointEntity)) {
+                 ignition::common::Console::warn << "Creating JointVelocity component for joint '" << name << "'. State reading might fail initially." << std::endl;
+                 _ecm.CreateComponent(jointEntity, ignition::gazebo::components::JointVelocity({0.0}));
             }
         }
 
         if (!all_joints_found || this->jointEntities_.size() != this->numJoints_) {
             ignition::common::Console::err << "Failed to find all " << this->numJoints_ << " joints specified in SDF. Found " << this->jointEntities_.size() << "." << std::endl;
-            this->jointEntities_.clear();
+            this->jointEntities_.clear(); // Ensure consistency
             return false;
         }
 
@@ -313,107 +326,140 @@ namespace hector_gazebo_plugins {
         return true;
     }
 
+    // --- PreUpdate ---
     void HectorGazeboFortressPlugin::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
                                                ignition::gazebo::EntityComponentManager &_ecm)
     {
+        // Check initialization status
         if (!this->sdfParsed_ || !this->rosInitialized_ || !this->ignTransportInitialized_) {
-            return;
+            return; // Not configured yet
         }
 
+        // Find entities on the first valid update if not found yet
         if (!this->entitiesFound_) {
             if (!FindEntities(_ecm)) {
-                ignition::common::Console::err << "Failed to find all required entities during the first PreUpdate. Plugin will not execute further." << std::endl;
+                ignition::common::Console::err << "Failed to find all required entities during PreUpdate. Plugin will not execute." << std::endl;
                 return;
             }
         }
 
+        // Spin ROS node to process incoming messages (like commands)
         if (this->rosNode_) {
+            // Use non-blocking spin_some
             rclcpp::spin_some(this->rosNode_);
         } else {
-            // Log error if ROS node becomes invalid after initialization?
-            // ignition::common::Console::err << "ROS Node pointer invalid during PreUpdate." << std::endl;
-            return;
+             if (this->rosInitialized_) { // Only log error if it was initialized before
+                ignition::common::Console::err << "ROS Node pointer invalid during PreUpdate." << std::endl;
+             }
+            return; // Cannot process commands or publish state
         }
 
+        // Do nothing if paused
         if (_info.paused) {
             return;
         }
 
+        // --- Apply Control ---
+        // Apply forces/torques based on the latest command received
         ApplyControl(_ecm);
+
+        // --- ReadAndPublishState moved to PostUpdate ---
+    }
+
+    // --- PostUpdate ---
+    void HectorGazeboFortressPlugin::PostUpdate(const ignition::gazebo::UpdateInfo &_info,
+                                                const ignition::gazebo::EntityComponentManager &_ecm)
+    {
+         // Check initialization and entity status (read-only check)
+        if (!this->sdfParsed_ || !this->rosInitialized_ || !this->ignTransportInitialized_ || !this->entitiesFound_) {
+            return; // Not ready or entities missing
+        }
+
+        // Do nothing if paused
+        if (_info.paused) {
+            return;
+        }
+
         ReadAndPublishState(_info, _ecm);
     }
+
 
     void HectorGazeboFortressPlugin::ApplyControl(ignition::gazebo::EntityComponentManager &_ecm)
     {
         std::lock_guard<std::mutex> lock(cmdMutex_);
-        const double no_cmd_torque = 0.0;
+        const double no_cmd_torque = 0.000;
+
+        // Check if we have a valid command
         if (!lastRosCmd_.has_value()) {
-            for (size_t i = 0; i < jointEntities_.size(); ++i) {
-                double current_pos = 0.0;
-                double current_vel = 0.0;
+            ignition::common::Console::err << "No ROS command received yet. Creating default command." << std::endl;
 
-                auto posComp = _ecm.Component<gz::sim::components::JointPosition>(jointEntities_[i]);
-                if (posComp) {
-                    ignition::common::Console::err << "2" << std::endl;
-                    if (posComp->Data().empty()) posComp->Data().resize(1);
-                    current_pos = posComp->Data()[0];
-                    ignition::common::Console::err << "joint--- " << jointNames_[i] <<"current_pos: "<< current_pos << std::endl;
+            lastRosCmd_.emplace(); // 调用默认构造函数
+
+            if (lastRosCmd_.has_value()) {
+                for (size_t i = 0; i < jointEntities_.size(); ++i) {
+                    lastRosCmd_->motor_command[i].q = 1.0;    // 默认目标位置
+                    lastRosCmd_->motor_command[i].dq = 0.0;   // 默认目标速度
+                    lastRosCmd_->motor_command[i].kp = 1.0;   // 默认 Kp (可能需要一个小的阻尼?)
+                    lastRosCmd_->motor_command[i].kd = 1.0;   // 默认 Kd (提供一些阻尼)
+                    lastRosCmd_->motor_command[i].tau = 0.0;   // 默认前馈力矩
                 }
-
-                auto velComp = _ecm.Component<gz::sim::components::JointVelocity>(jointEntities_[i]);
-                if (velComp) {
-                    if (velComp->Data().empty()) velComp->Data().resize(1);
-                    current_vel = velComp->Data()[0];
-                    ignition::common::Console::err << "joint " << jointNames_[i] <<"current_vel: "<< current_vel << std::endl;
-
+                ignition::common::Console::err << "----------------Applied default values to newly created command.-------------------" << std::endl;
+            } else {
+                ignition::common::Console::err << "Failed to emplace a default RobotCommand!" << std::endl;
+                for (size_t i = 0; i < jointEntities_.size(); ++i) {
+                    _ecm.SetComponentData<ignition::gazebo::components::JointForceCmd>(jointEntities_[i], {no_cmd_torque});
                 }
-
-
-                auto forceComp = _ecm.Component<ignition::gazebo::components::JointForceCmd>(jointEntities_[i]);
-                if (forceComp) {
-                    if (forceComp->Data().empty()) forceComp->Data().resize(1);
-                    forceComp->Data()[0] = no_cmd_torque;
-                    _ecm.SetChanged(jointEntities_[i], ignition::gazebo::components::JointForceCmd::typeId);
-                }
+                return;
             }
-            return;
         }
-
+        // if (!lastRosCmd_.has_value()) {
+        //     // 没有收到命令: 应用默认/安全力矩
+        //     for (size_t i = 0; i < jointEntities_.size(); ++i) {
+        //         _ecm.SetComponentData<ignition::gazebo::components::JointForceCmd>(
+        //            jointEntities_[i], {no_cmd_torque});
+        //     }
+        //     // 应用完默认值后，不再执行后续基于命令的控制，直接返回
+        //     return;
+        // }
         const auto& current_cmd = lastRosCmd_.value();
+
+        // Verify command size matches number of joints
         if (current_cmd.motor_command.size() != jointEntities_.size()) {
-            // Use lowercase 'warn'
-            ignition::common::Console::warn << "Received RobotCommand with " << current_cmd.motor_command.size()
+            ignition::common::Console::err << "Received RobotCommand with " << current_cmd.motor_command.size()
                    << " motor entries, but plugin controls " << jointEntities_.size()
-                   << " joints. Skipping command application and applying zero torque." << std::endl;
+                   << " joints. Applying zero torque." << std::endl;
+            // Apply zero torque due to mismatch
             for (size_t i = 0; i < jointEntities_.size(); ++i) {
-                auto forceComp = _ecm.Component<ignition::gazebo::components::JointForceCmd>(jointEntities_[i]);
-                if (forceComp) {
-                    if (forceComp->Data().empty()) forceComp->Data().resize(1);
-                    forceComp->Data()[0] = 0.0;
-                    _ecm.SetChanged(jointEntities_[i], ignition::gazebo::components::JointForceCmd::typeId);
-                }
+                 _ecm.SetComponentData<ignition::gazebo::components::JointForceCmd>(
+                    jointEntities_[i], {no_cmd_torque});
             }
-            lastRosCmd_.reset();
             return;
         }
 
+        // Apply the command from the message
         for (size_t i = 0; i < jointEntities_.size(); ++i)
         {
+            //ignition::common::Console::err << "----------control--------" << std::endl;
+
             ignition::gazebo::Entity jointEntity = jointEntities_[i];
             double current_pos = 0.0;
             double current_vel = 0.0;
 
+
             auto posComp = _ecm.Component<ignition::gazebo::components::JointPosition>(jointEntity);
             if (posComp && !posComp->Data().empty()) {
                 current_pos = posComp->Data()[0];
-                ignition::common::Console::err << "joint " << jointNames_[i] <<"current_pos: "<< current_pos << std::endl;
+                 //ignition::common::Console::warn << "joint " << jointNames_[i] <<" current_pos: "<< current_pos << std::endl; // Debug
+            } else {
+                 ignition::common::Console::err << "JointPosition missing/empty for " << jointNames_[i] << " in ApplyControl." << std::endl;
             }
 
             auto velComp = _ecm.Component<ignition::gazebo::components::JointVelocity>(jointEntity);
             if (velComp && !velComp->Data().empty()) {
                 current_vel = velComp->Data()[0];
-                ignition::common::Console::err << "joint " << jointNames_[i] <<"current_vel: "<< current_vel << std::endl;
-
+                 //ignition::common::Console::warn << "joint " << jointNames_[i] <<" current_vel: "<< current_vel << std::endl; // Debug
+            } else {
+                 ignition::common::Console::err << "JointVelocity missing/empty for " << jointNames_[i] << " in ApplyControl." << std::endl;
             }
 
             const auto& motor_cmd = current_cmd.motor_command[i];
@@ -427,34 +473,54 @@ namespace hector_gazebo_plugins {
             double vel_error = target_vel - current_vel;
             double torque_cmd = (kp * pos_error) + (kd * vel_error) + tau_ff;
 
-            auto forceComp = _ecm.Component<ignition::gazebo::components::JointForceCmd>(jointEntity);
-            if (forceComp) {
-                if (forceComp->Data().empty()) forceComp->Data().resize(1);
-                forceComp->Data()[0] = torque_cmd;
-                _ecm.SetChanged(jointEntity, ignition::gazebo::components::JointForceCmd::typeId);
+
+            // ++++++++++++++++ 开始：写入文件 ++++++++++++++++
+            std::ofstream outputFile;
+            // 打开文件 "1.txt"，使用追加模式 (std::ios::app)
+            outputFile.open("/home/cl/CLionProjects/hector_gazebo/src/hector_gazebo_fortress_plugin/1.txt", std::ios::app);
+
+            if (outputFile.is_open()) {
+                // 设置输出精度（例如，小数点后 6 位）并以定点表示法写入
+                outputFile << std::fixed << std::setprecision(6) << torque_cmd << std::endl;
+                outputFile.close(); // 关闭文件
             } else {
-                ignition::common::Console::err << "JointForceCmd component missing for joint " << jointNames_[i] << " during ApplyControl! Cannot apply torque." << std::endl;
+                // 如果文件打开失败，输出错误信息
+                ignition::common::Console::err << "Unable to open file 1.txt for writing torque_cmd for joint " << jointNames_[i] << std::endl;
             }
+            // ++++++++++++++++ 结束：写入文件 ++++++++++++++++
+
+
+
+            // Apply the calculated torque using OneTimeChange for efficiency
+            _ecm.SetComponentData<ignition::gazebo::components::JointForceCmd>(
+                jointEntity, {torque_cmd});
+            // ignition::common::Console::err << "Applying torque " << torque_cmd << " to " << jointNames_[i] << std::endl; // Debug
         }
-        // Optional: Reset command after applying
+
+        // Optional: Reset command after applying if you want each command to be used only once.
         // lastRosCmd_.reset();
     }
 
-    void HectorGazeboFortressPlugin::ReadAndPublishState(const ignition::gazebo::UpdateInfo &_info, ignition::gazebo::EntityComponentManager &_ecm)
+    // --- ReadAndPublishState (takes const ECM) ---
+    void HectorGazeboFortressPlugin::ReadAndPublishState(const ignition::gazebo::UpdateInfo &_info, const ignition::gazebo::EntityComponentManager &_ecm)
     {
         // --- 1. Populate RobotState Message ---
+        // Use _ecm.Component() which is const-correct for reading
         if (this->baseLinkEntity_ != ignition::gazebo::kNullEntity) {
             auto poseComp = _ecm.Component<ignition::gazebo::components::WorldPose>(this->baseLinkEntity_);
             auto linVelComp = _ecm.Component<ignition::gazebo::components::WorldLinearVelocity>(this->baseLinkEntity_);
             auto angVelComp = _ecm.Component<ignition::gazebo::components::WorldAngularVelocity>(this->baseLinkEntity_);
 
+            // --- Body Pose ---
             if (poseComp) {
                 const ignition::math::Pose3d& pose = poseComp->Data();
+                // Check size before access
                 if (robotStateMsg_.body_position.size() == 3) {
                     robotStateMsg_.body_position[0] = static_cast<float>(pose.Pos().X());
                     robotStateMsg_.body_position[1] = static_cast<float>(pose.Pos().Y());
                     robotStateMsg_.body_position[2] = static_cast<float>(pose.Pos().Z());
                 }
+                 // Use base link orientation only if IMU data hasn't been received
                 if (!imuReceived_ && robotStateMsg_.imu.size() > 0 && robotStateMsg_.imu[0].quaternion.size() == 4) {
                     robotStateMsg_.imu[0].quaternion[0] = static_cast<float>(pose.Rot().X());
                     robotStateMsg_.imu[0].quaternion[1] = static_cast<float>(pose.Rot().Y());
@@ -462,10 +528,15 @@ namespace hector_gazebo_plugins {
                     robotStateMsg_.imu[0].quaternion[3] = static_cast<float>(pose.Rot().W());
                 }
             } else {
+                 // If component missing, fill with zeros
                 std::fill(robotStateMsg_.body_position.begin(), robotStateMsg_.body_position.end(), 0.0f);
-                // Warning logged in FindEntities
+                 if (!imuReceived_ && robotStateMsg_.imu.size() > 0) {
+                     std::fill(robotStateMsg_.imu[0].quaternion.begin(), robotStateMsg_.imu[0].quaternion.end(), 0.0f);
+                 }
+                 // ignition::common::Console::warn << "WorldPose component missing for base link in ReadAndPublishState." << std::endl;
             }
 
+            // --- Body Velocity ---
             if (linVelComp) {
                 const ignition::math::Vector3d& lin_vel = linVelComp->Data();
                 if (robotStateMsg_.body_velocity.size() == 3) {
@@ -475,21 +546,22 @@ namespace hector_gazebo_plugins {
                 }
             } else {
                 std::fill(robotStateMsg_.body_velocity.begin(), robotStateMsg_.body_velocity.end(), 0.0f);
-                // Warning logged in FindEntities
+                // ignition::common::Console::warn << "WorldLinearVelocity component missing for base link in ReadAndPublishState." << std::endl;
             }
 
-            if (angVelComp && !imuReceived_ && robotStateMsg_.imu.size() > 0 && robotStateMsg_.imu[0].gyroscope.size() == 3) {
-                const ignition::math::Vector3d& ang_vel = angVelComp->Data();
-                robotStateMsg_.imu[0].gyroscope[0] = static_cast<float>(ang_vel.X());
-                robotStateMsg_.imu[0].gyroscope[1] = static_cast<float>(ang_vel.Y());
-                robotStateMsg_.imu[0].gyroscope[2] = static_cast<float>(ang_vel.Z());
-            }
-            else if (!imuReceived_ && robotStateMsg_.imu.size() > 0) {
-                std::fill(robotStateMsg_.imu[0].gyroscope.begin(), robotStateMsg_.imu[0].gyroscope.end(), 0.0f);
-                // Warning logged in FindEntities
-            }
+            // --- Body Angular Velocity (from world if IMU not available) ---
+             if (angVelComp && !imuReceived_ && robotStateMsg_.imu.size() > 0 && robotStateMsg_.imu[0].gyroscope.size() == 3) {
+                 const ignition::math::Vector3d& ang_vel = angVelComp->Data();
+                 robotStateMsg_.imu[0].gyroscope[0] = static_cast<float>(ang_vel.X());
+                 robotStateMsg_.imu[0].gyroscope[1] = static_cast<float>(ang_vel.Y());
+                 robotStateMsg_.imu[0].gyroscope[2] = static_cast<float>(ang_vel.Z());
+             }
+             else if (!imuReceived_ && robotStateMsg_.imu.size() > 0) {
+                 std::fill(robotStateMsg_.imu[0].gyroscope.begin(), robotStateMsg_.imu[0].gyroscope.end(), 0.0f);
+                 // ignition::common::Console::warn << "WorldAngularVelocity component missing/IMU not received in ReadAndPublishState." << std::endl;
+             }
         } else {
-            // Base link entity is null, zero out fields
+            // Base link entity is null, zero out relevant fields
             std::fill(robotStateMsg_.body_position.begin(), robotStateMsg_.body_position.end(), 0.0f);
             std::fill(robotStateMsg_.body_velocity.begin(), robotStateMsg_.body_velocity.end(), 0.0f);
             if (robotStateMsg_.imu.size() > 0) {
@@ -499,62 +571,72 @@ namespace hector_gazebo_plugins {
             }
         }
 
+        // --- IMU Data (from Ignition Transport callback) ---
         { // IMU Mutex Scope
             std::lock_guard<std::mutex> lock(imuMutex_);
             if (imuReceived_ && robotStateMsg_.imu.size() > 0) {
+                // Orientation (Quaternion)
                 if (lastIgnImuMsg_.has_orientation()) {
-                    if (robotStateMsg_.imu[0].quaternion.size() == 4) {
-                        robotStateMsg_.imu[0].quaternion[0] = static_cast<float>(lastIgnImuMsg_.orientation().x());
-                        robotStateMsg_.imu[0].quaternion[1] = static_cast<float>(lastIgnImuMsg_.orientation().y());
-                        robotStateMsg_.imu[0].quaternion[2] = static_cast<float>(lastIgnImuMsg_.orientation().z());
-                        robotStateMsg_.imu[0].quaternion[3] = static_cast<float>(lastIgnImuMsg_.orientation().w());
-                    }
+                     robotStateMsg_.imu[0].quaternion[0] = static_cast<float>(lastIgnImuMsg_.orientation().x());
+                     robotStateMsg_.imu[0].quaternion[1] = static_cast<float>(lastIgnImuMsg_.orientation().y());
+                     robotStateMsg_.imu[0].quaternion[2] = static_cast<float>(lastIgnImuMsg_.orientation().z());
+                     robotStateMsg_.imu[0].quaternion[3] = static_cast<float>(lastIgnImuMsg_.orientation().w());
                 }
+                // Gyroscope
                 if (lastIgnImuMsg_.has_angular_velocity()) {
-                    if (robotStateMsg_.imu[0].gyroscope.size() == 3) {
-                        robotStateMsg_.imu[0].gyroscope[0] = static_cast<float>(lastIgnImuMsg_.angular_velocity().x());
-                        robotStateMsg_.imu[0].gyroscope[1] = static_cast<float>(lastIgnImuMsg_.angular_velocity().y());
-                        robotStateMsg_.imu[0].gyroscope[2] = static_cast<float>(lastIgnImuMsg_.angular_velocity().z());
-                    }
+                    robotStateMsg_.imu[0].gyroscope[0] = static_cast<float>(lastIgnImuMsg_.angular_velocity().x());
+                    robotStateMsg_.imu[0].gyroscope[1] = static_cast<float>(lastIgnImuMsg_.angular_velocity().y());
+                    robotStateMsg_.imu[0].gyroscope[2] = static_cast<float>(lastIgnImuMsg_.angular_velocity().z());
                 }
+                // Accelerometer
                 if (lastIgnImuMsg_.has_linear_acceleration()) {
-                    if (robotStateMsg_.imu[0].accelerometer.size() == 3) {
-                        robotStateMsg_.imu[0].accelerometer[0] = static_cast<float>(lastIgnImuMsg_.linear_acceleration().x());
-                        robotStateMsg_.imu[0].accelerometer[1] = static_cast<float>(lastIgnImuMsg_.linear_acceleration().y());
-                        robotStateMsg_.imu[0].accelerometer[2] = static_cast<float>(lastIgnImuMsg_.linear_acceleration().z());
-                    }
+                    robotStateMsg_.imu[0].accelerometer[0] = static_cast<float>(lastIgnImuMsg_.linear_acceleration().x());
+                    robotStateMsg_.imu[0].accelerometer[1] = static_cast<float>(lastIgnImuMsg_.linear_acceleration().y());
+                    robotStateMsg_.imu[0].accelerometer[2] = static_cast<float>(lastIgnImuMsg_.linear_acceleration().z());
                 }
+                 // Reset flag? Decide if IMU data should persist if messages stop
+                 // imuReceived_ = false; // Uncomment if you want to fall back to base link data if IMU stops
             } else if (robotStateMsg_.imu.size() > 0) {
-                // Zero out accel if no IMU data (gyro/orientation handled above)
-                std::fill(robotStateMsg_.imu[0].accelerometer.begin(), robotStateMsg_.imu[0].accelerometer.end(), 0.0f);
+                // Ensure accel is zeroed if no IMU data ever received
+                 std::fill(robotStateMsg_.imu[0].accelerometer.begin(), robotStateMsg_.imu[0].accelerometer.end(), 0.0f);
             }
         } // End IMU Mutex Scope
 
-        // --- Get Joint States ---
+        // --- Joint States ---
         if (robotStateMsg_.motor_state.size() == jointEntities_.size()) {
+            //ignition::common::Console::err << "READ Joint States " << std::endl;
             for (size_t i = 0; i < jointEntities_.size(); ++i) {
                 ignition::gazebo::Entity jointEntity = jointEntities_[i];
                 auto posComp = _ecm.Component<ignition::gazebo::components::JointPosition>(jointEntity);
                 auto velComp = _ecm.Component<ignition::gazebo::components::JointVelocity>(jointEntity);
+
                 auto forceCmdComp = _ecm.Component<ignition::gazebo::components::JointForceCmd>(jointEntity);
 
+                // Position
                 if (posComp && !posComp->Data().empty()) {
                     robotStateMsg_.motor_state[i].q = static_cast<float>(posComp->Data()[0]);
                 } else {
-                    robotStateMsg_.motor_state[i].q = 0.0f;
+                    robotStateMsg_.motor_state[i].q = 0.0f; // Default value
+                    ignition::common::Console::warn << "JointPosition missing for " << jointNames_[i] << " in ReadAndPublishState." << std::endl;
                 }
+                // Velocity
                 if (velComp && !velComp->Data().empty()) {
                     robotStateMsg_.motor_state[i].dq = static_cast<float>(velComp->Data()[0]);
                 } else {
-                    robotStateMsg_.motor_state[i].dq = 0.0f;
+                    robotStateMsg_.motor_state[i].dq = 0.0f; // Default value
+                    // ignition::common::Console::warn << "JointVelocity missing for " << jointNames_[i] << " in ReadAndPublishState." << std::endl;
                 }
+                 // Estimated Torque (using commanded torque as placeholder)
                 if (forceCmdComp && !forceCmdComp->Data().empty()) {
+                    ignition::common::Console::err << "JointForceCmd missing for " << jointNames_[i] << " when reading tauEst." << std::endl;
+
                     robotStateMsg_.motor_state[i].tauest = static_cast<float>(forceCmdComp->Data()[0]);
                 } else {
-                    robotStateMsg_.motor_state[i].tauest = 0.0f;
+                    robotStateMsg_.motor_state[i].tauest = 0.0f; // Default value
+                    ignition::common::Console::err << "JointForceCmd missing for " << jointNames_[i] << " when reading tauEst." << std::endl;
                 }
             }
-        } else {
+        } else if (!jointEntities_.empty()) { // Avoid logging if joints weren't found at all
             ignition::common::Console::err << "Mismatch between robotStateMsg_.motor_state size ("
                       << robotStateMsg_.motor_state.size() << ") and found joint entities ("
                       << jointEntities_.size() << "). Skipping joint state population." << std::endl;
@@ -567,16 +649,20 @@ namespace hector_gazebo_plugins {
                 contactStateMsg_.contact_state[0] = leftContact_ ? 1.0f : 0.0f;
                 contactStateMsg_.contact_state[1] = rightContact_ ? 1.0f : 0.0f;
             }
-            // Reset flags for next step detection
+            // Reset flags *after* reading them for this timestep's publication
             leftContact_ = false;
             rightContact_ = false;
         } // End Contact Mutex Scope
 
         // --- 3. Publish ROS Messages ---
         if (rosRobotStatePub_) {
+            // Add timestamp (optional, but good practice)
+            // robotStateMsg_.header.stamp = rclcpp::Clock().now(); // Or use _info.simTime if desired
             rosRobotStatePub_->publish(robotStateMsg_);
         }
         if (rosContactStatePub_) {
+            // Add timestamp (optional)
+            // contactStateMsg_.header.stamp = rclcpp::Clock().now();
             rosContactStatePub_->publish(contactStateMsg_);
         }
     }
@@ -587,7 +673,7 @@ namespace hector_gazebo_plugins {
     {
         std::lock_guard<std::mutex> lock(cmdMutex_);
         lastRosCmd_ = *_msg;
-        // ignition::common::Console::warn << "Received new ROS command." << std::endl; // Optional
+        // ignition::common::Console::log << "Received new ROS command." << std::endl; // Use log or debug level
     }
 
     void HectorGazeboFortressPlugin::IgnImuCallback(const ignition::msgs::IMU &_msg)
@@ -595,50 +681,68 @@ namespace hector_gazebo_plugins {
         std::lock_guard<std::mutex> lock(imuMutex_);
         lastIgnImuMsg_ = _msg;
         imuReceived_ = true;
-        // ignition::common::Console::warn << "Received Ignition IMU data." << std::endl; // Optional
+        // ignition::common::Console::log << "Received Ignition IMU data." << std::endl;
     }
 
     void HectorGazeboFortressPlugin::IgnLeftContactCallback(const ignition::msgs::Contacts &_msg)
     {
+        // Check for contact with the specified ground collision object
         bool contact_with_ground = false;
         for (int i = 0; i < _msg.contact_size(); ++i) {
             const auto& contact = _msg.contact(i);
+            // Check both collision objects involved in the contact
             if (contact.collision1().name().find(this->groundCollisionName_) != std::string::npos ||
                 contact.collision2().name().find(this->groundCollisionName_) != std::string::npos)
             {
-                contact_with_ground = true;
-                break;
+                 // Ensure the *other* collision isn't also the ground (unlikely but possible)
+                // This assumes the contact sensor is attached to the foot/toe link
+                if (contact.collision1().name().find(this->groundCollisionName_) == std::string::npos ||
+                    contact.collision2().name().find(this->groundCollisionName_) == std::string::npos)
+                {
+                    contact_with_ground = true;
+                    break; // Found one valid ground contact
+                }
             }
         }
+
+        // Set the flag if contact occurred (will be read in PostUpdate)
         if (contact_with_ground) {
             std::lock_guard<std::mutex> lock(contactMutex_);
             leftContact_ = true;
-            // ignition::common::Console::warn << "Left Contact detected." << std::endl; // Optional
+            // ignition::common::Console::log << "Left Contact detected." << std::endl;
         }
+        // Note: No 'else' here, the flag is reset in PostUpdate after publishing
     }
 
     void HectorGazeboFortressPlugin::IgnRightContactCallback(const ignition::msgs::Contacts &_msg)
     {
-        bool contact_with_ground = false;
+        // Check for contact with the specified ground collision object
+         bool contact_with_ground = false;
         for (int i = 0; i < _msg.contact_size(); ++i) {
             const auto& contact = _msg.contact(i);
             if (contact.collision1().name().find(this->groundCollisionName_) != std::string::npos ||
                contact.collision2().name().find(this->groundCollisionName_) != std::string::npos)
             {
-                contact_with_ground = true;
-                break;
+                if (contact.collision1().name().find(this->groundCollisionName_) == std::string::npos ||
+                    contact.collision2().name().find(this->groundCollisionName_) == std::string::npos)
+                {
+                    contact_with_ground = true;
+                    break;
+                }
             }
         }
+
         if (contact_with_ground) {
             std::lock_guard<std::mutex> lock(contactMutex_);
             rightContact_ = true;
-            // ignition::common::Console::warn << "Right Contact detected." << std::endl; // Optional
+             // ignition::common::Console::log << "Right Contact detected." << std::endl;
         }
     }
-}
+} // namespace hector_gazebo_plugins
 
 // --- Plugin Registration ---
 IGNITION_ADD_PLUGIN(hector_gazebo_plugins::HectorGazeboFortressPlugin,
               ignition::gazebo::System,
               hector_gazebo_plugins::HectorGazeboFortressPlugin::ISystemConfigure,
-              hector_gazebo_plugins::HectorGazeboFortressPlugin::ISystemPreUpdate)
+              hector_gazebo_plugins::HectorGazeboFortressPlugin::ISystemPreUpdate,
+              hector_gazebo_plugins::HectorGazeboFortressPlugin::ISystemPostUpdate) // <-- Added PostUpdate Interface registration

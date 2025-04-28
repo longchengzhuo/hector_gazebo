@@ -33,34 +33,35 @@ namespace hector_gazebo_plugins
 class HectorGazeboFortressPlugin :
     public ignition::gazebo::System,
     public ignition::gazebo::ISystemConfigure,
-    public ignition::gazebo::ISystemPreUpdate
+    public ignition::gazebo::ISystemPreUpdate,
+    public ignition::gazebo::ISystemPostUpdate
 {
 public:
     HectorGazeboFortressPlugin();
     virtual ~HectorGazeboFortressPlugin() override;
 
     // --- System Interface Implementations ---
-    // ISystemConfigure uses the full ignition::gazebo::EntityComponentManager type
     void Configure(const ignition::gazebo::Entity &_entity,
                    const std::shared_ptr<const sdf::Element> &_sdf,
-                   ignition::gazebo::EntityComponentManager &_ecm, // Needs full definition
+                   ignition::gazebo::EntityComponentManager &_ecm,
                    ignition::gazebo::EventManager &_eventMgr) override;
 
-    // ISystemPreUpdate uses the full ignition::gazebo::EntityComponentManager type
     void PreUpdate(const ignition::gazebo::UpdateInfo &_info,
-                   ignition::gazebo::EntityComponentManager &_ecm) override; // Needs full definition
+                   ignition::gazebo::EntityComponentManager &_ecm) override;
+
+    // <-- Added PostUpdate Declaration -->
+    void PostUpdate(const ignition::gazebo::UpdateInfo &_info,
+                    const ignition::gazebo::EntityComponentManager &_ecm) override;
 
 private:
     // --- Helper Functions ---
     bool ParseSDF(const std::shared_ptr<const sdf::Element> &_sdf);
     void InitROS();
     void InitIgnitionTransport();
-    // Uses ignition::gazebo::EntityComponentManager
-    bool FindEntities(ignition::gazebo::EntityComponentManager &_ecm); // Needs full definition
-    // Uses ignition::gazebo::EntityComponentManager
-    void ApplyControl(ignition::gazebo::EntityComponentManager &_ecm); // Needs full definition
-    // Uses ignition::gazebo::EntityComponentManager
-    void ReadAndPublishState(const ignition::gazebo::UpdateInfo &_info, ignition::gazebo::EntityComponentManager &_ecm); // Needs full definition
+    bool FindEntities(ignition::gazebo::EntityComponentManager &_ecm);
+    void ApplyControl(ignition::gazebo::EntityComponentManager &_ecm);
+    // Changed _ecm to const as PostUpdate provides const access
+    void ReadAndPublishState(const ignition::gazebo::UpdateInfo &_info, const ignition::gazebo::EntityComponentManager &_ecm);
 
     // --- Callbacks ---
     void RosCommandCallback(const laser_interfaces::msg::RobotCommand::SharedPtr _msg);
@@ -95,21 +96,14 @@ private:
     std::optional<laser_interfaces::msg::RobotCommand> lastRosCmd_;
     std::mutex cmdMutex_;
 
-    // Ignition Transport
     ignition::transport::Node ignNode_;
-    ignition::transport::Node::Publisher ignJointCmdPub_; // Example: If publishing joint commands via ign transport
-    // Add subscriptions if needed for IMU/Contact if not handled by callbacks directly
-    // ignition::transport::Node::Subscription<ignition::msgs::IMU>::SharedPtr ignImuSub_;
-    // ignition::transport::Node::Subscription<ignition::msgs::Contacts>::SharedPtr ignLeftContactSub_;
-    // ignition::transport::Node::Subscription<ignition::msgs::Contacts>::SharedPtr ignRightContactSub_;
 
-
-    // State Storage
     std::mutex imuMutex_;
     ignition::msgs::IMU lastIgnImuMsg_;
     bool imuReceived_{false};
 
     std::mutex contactMutex_;
+
     bool leftContact_{false};
     bool rightContact_{false};
 
@@ -124,6 +118,6 @@ private:
     bool sdfParsed_{false};
 };
 
-} // namespace hector_gazebo_plugins
+}
 
-#endif // HECTOR_GAZEBO_FORTRESS_PLUGIN_HH_
+#endif

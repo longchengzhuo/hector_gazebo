@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <sdf version="1.6">
   <world name="default">
-    <gravity>0 0 0</gravity>
+    <gravity>0 0 -9.81</gravity>
 
     <light type="directional" name="sun">
       <cast_shadows>true</cast_shadows>
