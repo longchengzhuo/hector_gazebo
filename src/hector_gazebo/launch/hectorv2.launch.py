@@ -9,7 +9,7 @@ import xacro
 
 
 robot_name_in_gazebo = 'hector_description' 
-initial_pose = [0.0, 0.0, 0.7, 0, -1.57, 0.0]
+initial_pose = [0.0, 0.0, 0.55, 0.0, 0.0, 0.0]
 
 hector_gazebo_pkg_path = get_package_share_directory('hector_gazebo')
 
@@ -47,7 +47,7 @@ def generate_launch_description():
             ])
         ),
         launch_arguments={
-            'gz_args': f'-r -v 4 {gz_world_arg}'.strip()
+            'gz_args': f'-r -v 2 {gz_world_arg}'.strip()
         }.items()
     )
 

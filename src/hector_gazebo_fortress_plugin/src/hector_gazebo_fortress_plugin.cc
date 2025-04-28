@@ -6,8 +6,10 @@
 #include <ignition/gazebo/components/Pose.hh>
 #include <ignition/gazebo/components/LinearVelocity.hh>
 #include <ignition/gazebo/components/AngularVelocity.hh>
-#include <ignition/gazebo/components/JointPosition.hh>
-#include <ignition/gazebo/components/JointVelocity.hh>
+// #include <ignition/gazebo/components/JointPosition.hh>
+// #include <ignition/gazebo/components/JointVelocity.hh>
+#include <gz/sim/components/JointPosition.hh>
+#include <gz/sim/components/JointVelocity.hh>
 #include <ignition/gazebo/components/JointForceCmd.hh>
 #include <ignition/gazebo/Model.hh>
 #include <ignition/gazebo/Util.hh>
@@ -44,6 +46,9 @@ namespace hector_gazebo_plugins {
                                                ignition::gazebo::EntityComponentManager &_ecm,
                                                ignition::gazebo::EventManager &/*_eventMgr*/)
     {
+        ignition::common::Console::err << "------------------S---------T---------A---------R---------T------------------" << std::endl;
+
+
         this->modelEntity_ = _entity;
         ignition::gazebo::Model model(this->modelEntity_);
 
@@ -56,7 +61,7 @@ namespace hector_gazebo_plugins {
         std::string modelNameStr = modelNameOpt.value_or("N/A");
 
         // --- 使用获取到的 modelNameStr 进行日志记录 ---
-        ignition::common::Console::dbg << "Configure called for model: " << modelNameStr << std::endl;
+        ignition::common::Console::warn << "Configure called for model: " << modelNameStr << std::endl;
 
         // --- 1. Parse SDF ---
         if (!ParseSDF(_sdf))
@@ -65,7 +70,7 @@ namespace hector_gazebo_plugins {
             return;
         }
         this->sdfParsed_ = true;
-        ignition::common::Console::msg << "SDF parsed successfully for " << modelNameStr << "." << std::endl;
+        ignition::common::Console::warn << "SDF parsed successfully for " << modelNameStr << "." << std::endl;
 
         // --- 2. Initialize ROS ---
         InitROS();
@@ -74,7 +79,7 @@ namespace hector_gazebo_plugins {
             ignition::common::Console::err << "Failed to initialize ROS components for " << modelNameStr << "." << std::endl;
             return;
         }
-        ignition::common::Console::msg << "ROS components initialized for " << modelNameStr << "." << std::endl;
+        ignition::common::Console::warn << "ROS components initialized for " << modelNameStr << "." << std::endl;
 
         // --- 3. Initialize Ignition Transport ---
         InitIgnitionTransport();
@@ -83,7 +88,7 @@ namespace hector_gazebo_plugins {
             ignition::common::Console::err << "Failed to initialize Ignition Transport subscribers for " << modelNameStr << "." << std::endl;
             return;
         }
-        ignition::common::Console::msg << "Ignition Transport initialized for " << modelNameStr << "." << std::endl;
+        ignition::common::Console::warn << "Ignition Transport initialized for " << modelNameStr << "." << std::endl;
     }
 
 
@@ -99,7 +104,7 @@ namespace hector_gazebo_plugins {
 
         while (jointElem) {
             jointNames_.push_back(jointElem->Get<std::string>());
-            ignition::common::Console::dbg << "Found joint to control: " << jointNames_.back() << std::endl;
+            ignition::common::Console::warn << "Found joint to control: " << jointNames_.back() << std::endl;
             jointElem = jointElem->GetNextElement("joint_name");
         }
         if (jointNames_.empty()) {
@@ -107,19 +112,19 @@ namespace hector_gazebo_plugins {
             return false;
         }
         numJoints_ = jointNames_.size();
-        ignition::common::Console::msg << "Expecting " << numJoints_ << " joints based on SDF." << std::endl;
+        ignition::common::Console::warn << "Expecting " << numJoints_ << " joints based on SDF." << std::endl;
 
         // --- Link Name ---
         baseLinkName_ = _sdf->Get<std::string>("base_link_name", "base_link").first;
-        ignition::common::Console::msg << "Using base link name: " << baseLinkName_ << std::endl;
+        ignition::common::Console::warn << "Using base link name: " << baseLinkName_ << std::endl;
 
         // --- ROS Topics ---
         rosCmdTopic_ = _sdf->Get<std::string>("ros_cmd_topic", "/Hector_Command").first;
         rosRobotStateTopic_ = _sdf->Get<std::string>("ros_robot_state_topic", "/Hector_State").first;
         rosContactStateTopic_ = _sdf->Get<std::string>("ros_contact_state_topic", "/true_toe_floor_contact").first;
-        ignition::common::Console::msg << "ROS Command Topic: " << rosCmdTopic_ << std::endl;
-        ignition::common::Console::msg << "ROS Robot State Topic: " << rosRobotStateTopic_ << std::endl;
-        ignition::common::Console::msg << "ROS Contact State Topic: " << rosContactStateTopic_ << std::endl;
+        ignition::common::Console::warn << "ROS Command Topic: " << rosCmdTopic_ << std::endl;
+        ignition::common::Console::warn << "ROS Robot State Topic: " << rosRobotStateTopic_ << std::endl;
+        ignition::common::Console::warn << "ROS Contact State Topic: " << rosContactStateTopic_ << std::endl;
 
         // --- Ignition Topics ---
         if (!_sdf->HasElement("ign_imu_topic")) {
@@ -140,13 +145,13 @@ namespace hector_gazebo_plugins {
         }
         ignRightContactTopic_ = _sdf->Get<std::string>("ign_right_contact_topic");
 
-        ignition::common::Console::msg << "Ignition IMU Topic: " << ignImuTopic_ << std::endl;
-        ignition::common::Console::msg << "Ignition Left Contact Topic: " << ignLeftContactTopic_ << std::endl;
-        ignition::common::Console::msg << "Ignition Right Contact Topic: " << ignRightContactTopic_ << std::endl;
+        ignition::common::Console::warn << "Ignition IMU Topic: " << ignImuTopic_ << std::endl;
+        ignition::common::Console::warn << "Ignition Left Contact Topic: " << ignLeftContactTopic_ << std::endl;
+        ignition::common::Console::warn << "Ignition Right Contact Topic: " << ignRightContactTopic_ << std::endl;
 
         // --- Ground Collision Name ---
         groundCollisionName_ = _sdf->Get<std::string>("ground_collision_name", "ground_plane::link::collision").first;
-        ignition::common::Console::msg << "Using ground collision name pattern: '" << groundCollisionName_ << "'" << std::endl;
+        ignition::common::Console::warn << "Using ground collision name pattern: '" << groundCollisionName_ << "'" << std::endl;
 
         return true;
     }
@@ -225,7 +230,7 @@ namespace hector_gazebo_plugins {
 
         this->rosInitialized_ = true;
         // Corrected Logging Syntax (lowercase):
-        ignition::common::Console::msg << "ROS Node '" << rosNode_->get_name() << "' initialized successfully." << std::endl;
+        ignition::common::Console::warn << "ROS Node '" << rosNode_->get_name() << "' initialized successfully." << std::endl;
     }
 
     void HectorGazeboFortressPlugin::InitIgnitionTransport()
@@ -246,7 +251,7 @@ namespace hector_gazebo_plugins {
             return;
         }
         this->ignTransportInitialized_ = true;
-        ignition::common::Console::msg << "Ignition Transport subscriptions initialized." << std::endl;
+        ignition::common::Console::warn << "Ignition Transport subscriptions initialized." << std::endl;
     }
 
     bool HectorGazeboFortressPlugin::FindEntities(ignition::gazebo::EntityComponentManager &_ecm)
@@ -258,7 +263,7 @@ namespace hector_gazebo_plugins {
             ignition::common::Console::err << "Base link named '" << this->baseLinkName_ << "' not found within model." << std::endl;
             return false;
         }
-        ignition::common::Console::msg << "Found base link '" << this->baseLinkName_ << "' with entity ID: " << this->baseLinkEntity_ << std::endl;
+        ignition::common::Console::warn << "Found base link '" << this->baseLinkName_ << "' with entity ID: " << this->baseLinkEntity_ << std::endl;
 
         // Use lowercase 'warn' for warnings
         if (!_ecm.Component<ignition::gazebo::components::WorldPose>(this->baseLinkEntity_)) {
@@ -282,17 +287,17 @@ namespace hector_gazebo_plugins {
                 continue;
             }
             this->jointEntities_.push_back(jointEntity);
-            ignition::common::Console::msg << "Found joint '" << name << "' with entity ID: " << jointEntity << std::endl;
+            ignition::common::Console::warn << "Found joint '" << name << "' with entity ID: " << jointEntity << std::endl;
 
             if (!_ecm.Component<ignition::gazebo::components::JointForceCmd>(jointEntity)) {
                 _ecm.CreateComponent(jointEntity, ignition::gazebo::components::JointForceCmd({0.0}));
-                ignition::common::Console::msg << "Created JointForceCmd component for joint '" << name << "'" << std::endl;
+                ignition::common::Console::warn << "Created JointForceCmd component for joint '" << name << "'" << std::endl;
             }
             // Use lowercase 'warn'
-            if (!_ecm.Component<ignition::gazebo::components::JointPosition>(jointEntity)) {
+            if (!_ecm.Component<gz::sim::components::JointPosition>(jointEntity)) {
                 ignition::common::Console::warn << "JointPosition component not found for joint '" << name << "'. State reading might fail." << std::endl;
             }
-            if (!_ecm.Component<ignition::gazebo::components::JointVelocity>(jointEntity)) {
+            if (!_ecm.Component<gz::sim::components::JointVelocity>(jointEntity)) {
                 ignition::common::Console::warn << "JointVelocity component not found for joint '" << name << "'. State reading might fail." << std::endl;
             }
         }
@@ -304,7 +309,7 @@ namespace hector_gazebo_plugins {
         }
 
         this->entitiesFound_ = true;
-        ignition::common::Console::msg << "All required entities (base link and " << this->jointEntities_.size() << " joints) found." << std::endl;
+        ignition::common::Console::warn << "All required entities (base link and " << this->jointEntities_.size() << " joints) found." << std::endl;
         return true;
     }
 
@@ -341,13 +346,33 @@ namespace hector_gazebo_plugins {
     void HectorGazeboFortressPlugin::ApplyControl(ignition::gazebo::EntityComponentManager &_ecm)
     {
         std::lock_guard<std::mutex> lock(cmdMutex_);
-        const double test_torque = 0.0005;
+        const double no_cmd_torque = 0.0;
         if (!lastRosCmd_.has_value()) {
             for (size_t i = 0; i < jointEntities_.size(); ++i) {
+                double current_pos = 0.0;
+                double current_vel = 0.0;
+
+                auto posComp = _ecm.Component<gz::sim::components::JointPosition>(jointEntities_[i]);
+                if (posComp) {
+                    ignition::common::Console::err << "2" << std::endl;
+                    if (posComp->Data().empty()) posComp->Data().resize(1);
+                    current_pos = posComp->Data()[0];
+                    ignition::common::Console::err << "joint--- " << jointNames_[i] <<"current_pos: "<< current_pos << std::endl;
+                }
+
+                auto velComp = _ecm.Component<gz::sim::components::JointVelocity>(jointEntities_[i]);
+                if (velComp) {
+                    if (velComp->Data().empty()) velComp->Data().resize(1);
+                    current_vel = velComp->Data()[0];
+                    ignition::common::Console::err << "joint " << jointNames_[i] <<"current_vel: "<< current_vel << std::endl;
+
+                }
+
+
                 auto forceComp = _ecm.Component<ignition::gazebo::components::JointForceCmd>(jointEntities_[i]);
                 if (forceComp) {
                     if (forceComp->Data().empty()) forceComp->Data().resize(1);
-                    forceComp->Data()[0] = test_torque;
+                    forceComp->Data()[0] = no_cmd_torque;
                     _ecm.SetChanged(jointEntities_[i], ignition::gazebo::components::JointForceCmd::typeId);
                 }
             }
@@ -381,12 +406,15 @@ namespace hector_gazebo_plugins {
             auto posComp = _ecm.Component<ignition::gazebo::components::JointPosition>(jointEntity);
             if (posComp && !posComp->Data().empty()) {
                 current_pos = posComp->Data()[0];
-            } // Else: Assume 0.0, warning logged in FindEntities if component missing
+                ignition::common::Console::err << "joint " << jointNames_[i] <<"current_pos: "<< current_pos << std::endl;
+            }
 
             auto velComp = _ecm.Component<ignition::gazebo::components::JointVelocity>(jointEntity);
             if (velComp && !velComp->Data().empty()) {
                 current_vel = velComp->Data()[0];
-            } // Else: Assume 0.0, warning logged in FindEntities if component missing
+                ignition::common::Console::err << "joint " << jointNames_[i] <<"current_vel: "<< current_vel << std::endl;
+
+            }
 
             const auto& motor_cmd = current_cmd.motor_command[i];
             double target_pos = motor_cmd.q;
@@ -559,7 +587,7 @@ namespace hector_gazebo_plugins {
     {
         std::lock_guard<std::mutex> lock(cmdMutex_);
         lastRosCmd_ = *_msg;
-        // ignition::common::Console::dbg << "Received new ROS command." << std::endl; // Optional
+        // ignition::common::Console::warn << "Received new ROS command." << std::endl; // Optional
     }
 
     void HectorGazeboFortressPlugin::IgnImuCallback(const ignition::msgs::IMU &_msg)
@@ -567,7 +595,7 @@ namespace hector_gazebo_plugins {
         std::lock_guard<std::mutex> lock(imuMutex_);
         lastIgnImuMsg_ = _msg;
         imuReceived_ = true;
-        // ignition::common::Console::dbg << "Received Ignition IMU data." << std::endl; // Optional
+        // ignition::common::Console::warn << "Received Ignition IMU data." << std::endl; // Optional
     }
 
     void HectorGazeboFortressPlugin::IgnLeftContactCallback(const ignition::msgs::Contacts &_msg)
@@ -585,7 +613,7 @@ namespace hector_gazebo_plugins {
         if (contact_with_ground) {
             std::lock_guard<std::mutex> lock(contactMutex_);
             leftContact_ = true;
-            // ignition::common::Console::dbg << "Left Contact detected." << std::endl; // Optional
+            // ignition::common::Console::warn << "Left Contact detected." << std::endl; // Optional
         }
     }
 
@@ -604,7 +632,7 @@ namespace hector_gazebo_plugins {
         if (contact_with_ground) {
             std::lock_guard<std::mutex> lock(contactMutex_);
             rightContact_ = true;
-            // ignition::common::Console::dbg << "Right Contact detected." << std::endl; // Optional
+            // ignition::common::Console::warn << "Right Contact detected." << std::endl; // Optional
         }
     }
 }
