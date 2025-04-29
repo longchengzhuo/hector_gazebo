@@ -9,6 +9,8 @@
 #include <ignition/gazebo/components/JointPosition.hh>
 #include <ignition/gazebo/components/JointVelocity.hh>
 #include <ignition/gazebo/components/JointForceCmd.hh>
+#include <ignition/gazebo/components/JointForce.hh>
+
 #include <ignition/gazebo/Model.hh>
 #include <ignition/gazebo/Util.hh>
 
@@ -25,6 +27,7 @@
 #include <algorithm>
 #include <vector>
 #include <string>
+
 
 namespace hector_gazebo_plugins {
     HectorGazeboFortressPlugin::HectorGazeboFortressPlugin()
@@ -299,7 +302,11 @@ namespace hector_gazebo_plugins {
             ignition::common::Console::warn << "Found joint '" << name << "' with entity ID: " << jointEntity << std::endl;
 
             // Check for components needed in PreUpdate (applying control)
-             if (!_ecm.Component<ignition::gazebo::components::JointForceCmd>(jointEntity)) {
+            if (!_ecm.Component<ignition::gazebo::components::JointForce>(jointEntity)) {
+                _ecm.CreateComponent(jointEntity, ignition::gazebo::components::JointForce({0.0}));
+                ignition::common::Console::warn << "Created JointForce component for joint '" << name << "'" << std::endl;
+            }
+            if (!_ecm.Component<ignition::gazebo::components::JointForceCmd>(jointEntity)) {
                 _ecm.CreateComponent(jointEntity, ignition::gazebo::components::JointForceCmd({0.0}));
                 ignition::common::Console::warn << "Created JointForceCmd component for joint '" << name << "'" << std::endl;
             }
@@ -362,8 +369,6 @@ namespace hector_gazebo_plugins {
         // --- Apply Control ---
         // Apply forces/torques based on the latest command received
         ApplyControl(_ecm);
-
-        // --- ReadAndPublishState moved to PostUpdate ---
     }
 
     // --- PostUpdate ---
@@ -380,14 +385,14 @@ namespace hector_gazebo_plugins {
             return;
         }
 
-        ReadAndPublishState(_info, _ecm);
+         ReadAndPublishState(_info, _ecm);
     }
 
 
     void HectorGazeboFortressPlugin::ApplyControl(ignition::gazebo::EntityComponentManager &_ecm)
     {
         std::lock_guard<std::mutex> lock(cmdMutex_);
-        const double no_cmd_torque = 0.000;
+        const double no_cmd_torque = 0.001;
 
         // Check if we have a valid command
         if (!lastRosCmd_.has_value()) {
@@ -412,15 +417,6 @@ namespace hector_gazebo_plugins {
                 return;
             }
         }
-        // if (!lastRosCmd_.has_value()) {
-        //     // 没有收到命令: 应用默认/安全力矩
-        //     for (size_t i = 0; i < jointEntities_.size(); ++i) {
-        //         _ecm.SetComponentData<ignition::gazebo::components::JointForceCmd>(
-        //            jointEntities_[i], {no_cmd_torque});
-        //     }
-        //     // 应用完默认值后，不再执行后续基于命令的控制，直接返回
-        //     return;
-        // }
         const auto& current_cmd = lastRosCmd_.value();
 
         // Verify command size matches number of joints
@@ -472,24 +468,6 @@ namespace hector_gazebo_plugins {
             double pos_error = target_pos - current_pos;
             double vel_error = target_vel - current_vel;
             double torque_cmd = (kp * pos_error) + (kd * vel_error) + tau_ff;
-
-
-            // ++++++++++++++++ 开始：写入文件 ++++++++++++++++
-            std::ofstream outputFile;
-            // 打开文件 "1.txt"，使用追加模式 (std::ios::app)
-            outputFile.open("/home/cl/CLionProjects/hector_gazebo/src/hector_gazebo_fortress_plugin/1.txt", std::ios::app);
-
-            if (outputFile.is_open()) {
-                // 设置输出精度（例如，小数点后 6 位）并以定点表示法写入
-                outputFile << std::fixed << std::setprecision(6) << torque_cmd << std::endl;
-                outputFile.close(); // 关闭文件
-            } else {
-                // 如果文件打开失败，输出错误信息
-                ignition::common::Console::err << "Unable to open file 1.txt for writing torque_cmd for joint " << jointNames_[i] << std::endl;
-            }
-            // ++++++++++++++++ 结束：写入文件 ++++++++++++++++
-
-
 
             // Apply the calculated torque using OneTimeChange for efficiency
             _ecm.SetComponentData<ignition::gazebo::components::JointForceCmd>(
@@ -610,14 +588,16 @@ namespace hector_gazebo_plugins {
                 auto posComp = _ecm.Component<ignition::gazebo::components::JointPosition>(jointEntity);
                 auto velComp = _ecm.Component<ignition::gazebo::components::JointVelocity>(jointEntity);
 
-                auto forceCmdComp = _ecm.Component<ignition::gazebo::components::JointForceCmd>(jointEntity);
+                auto forceComp = _ecm.Component<ignition::gazebo::components::JointForce>(jointEntity);
+
+
 
                 // Position
                 if (posComp && !posComp->Data().empty()) {
                     robotStateMsg_.motor_state[i].q = static_cast<float>(posComp->Data()[0]);
                 } else {
                     robotStateMsg_.motor_state[i].q = 0.0f; // Default value
-                    ignition::common::Console::warn << "JointPosition missing for " << jointNames_[i] << " in ReadAndPublishState." << std::endl;
+                    //ignition::common::Console::warn << "JointPosition missing for " << jointNames_[i] << " in ReadAndPublishState." << std::endl;
                 }
                 // Velocity
                 if (velComp && !velComp->Data().empty()) {
@@ -627,10 +607,8 @@ namespace hector_gazebo_plugins {
                     // ignition::common::Console::warn << "JointVelocity missing for " << jointNames_[i] << " in ReadAndPublishState." << std::endl;
                 }
                  // Estimated Torque (using commanded torque as placeholder)
-                if (forceCmdComp && !forceCmdComp->Data().empty()) {
-                    ignition::common::Console::err << "JointForceCmd missing for " << jointNames_[i] << " when reading tauEst." << std::endl;
-
-                    robotStateMsg_.motor_state[i].tauest = static_cast<float>(forceCmdComp->Data()[0]);
+                if (forceComp && !forceComp->Data().empty()) {
+                    robotStateMsg_.motor_state[i].tauest = static_cast<float>(forceComp->Data()[0]);
                 } else {
                     robotStateMsg_.motor_state[i].tauest = 0.0f; // Default value
                     ignition::common::Console::err << "JointForceCmd missing for " << jointNames_[i] << " when reading tauEst." << std::endl;
@@ -656,13 +634,9 @@ namespace hector_gazebo_plugins {
 
         // --- 3. Publish ROS Messages ---
         if (rosRobotStatePub_) {
-            // Add timestamp (optional, but good practice)
-            // robotStateMsg_.header.stamp = rclcpp::Clock().now(); // Or use _info.simTime if desired
             rosRobotStatePub_->publish(robotStateMsg_);
         }
         if (rosContactStatePub_) {
-            // Add timestamp (optional)
-            // contactStateMsg_.header.stamp = rclcpp::Clock().now();
             rosContactStatePub_->publish(contactStateMsg_);
         }
     }
@@ -673,7 +647,7 @@ namespace hector_gazebo_plugins {
     {
         std::lock_guard<std::mutex> lock(cmdMutex_);
         lastRosCmd_ = *_msg;
-        // ignition::common::Console::log << "Received new ROS command." << std::endl; // Use log or debug level
+        ignition::common::Console::err << "Received new ROS command." << std::endl; // Use log or debug level
     }
 
     void HectorGazeboFortressPlugin::IgnImuCallback(const ignition::msgs::IMU &_msg)
@@ -681,7 +655,6 @@ namespace hector_gazebo_plugins {
         std::lock_guard<std::mutex> lock(imuMutex_);
         lastIgnImuMsg_ = _msg;
         imuReceived_ = true;
-        // ignition::common::Console::log << "Received Ignition IMU data." << std::endl;
     }
 
     void HectorGazeboFortressPlugin::IgnLeftContactCallback(const ignition::msgs::Contacts &_msg)
