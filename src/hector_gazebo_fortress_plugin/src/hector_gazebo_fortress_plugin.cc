@@ -47,7 +47,7 @@ namespace hector_gazebo_plugins {
                                                ignition::gazebo::EntityComponentManager &_ecm,
                                                ignition::gazebo::EventManager &/*_eventMgr*/)
     {
-        ignition::common::Console::err << "------------------S---------T---------A---------R---------T------------------" << std::endl;
+        ignition::common::Console::err << "-------HECTORv2-GAZEBO-----------S---------T---------A---------R---------T-------HECTORv2-GAZEBO-----------" << std::endl;
 
 
         this->modelEntity_ = _entity;
@@ -392,7 +392,7 @@ namespace hector_gazebo_plugins {
     void HectorGazeboFortressPlugin::ApplyControl(ignition::gazebo::EntityComponentManager &_ecm)
     {
         std::lock_guard<std::mutex> lock(cmdMutex_);
-        const double no_cmd_torque = 0.001;
+        const double no_cmd_torque = 0.00;
 
         // Check if we have a valid command
         if (!lastRosCmd_.has_value()) {
