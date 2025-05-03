@@ -1,0 +1,1401 @@
+<sdf version='1.9'>
+  <model name='hector_v2'>
+    <link name='base_link'>
+      <inertial>
+        <pose>2.630194634402946e-06 2.20585656671927e-05 4.29598456952481e-05 0 0 0</pose>
+        <mass>5.7030000000000012</mass>
+        <inertia>
+          <ixx>0.046763409339870249</ixx>
+          <ixy>1.194330878485007e-06</ixy>
+          <ixz>-2.4024355602314572e-05</ixz>
+          <iyy>0.037036939435384893</iyy>
+          <iyz>-9.3345956514115385e-06</iyz>
+          <izz>0.02488541982557952</izz>
+        </inertia>
+      </inertial>
+      <collision name='base_link_fixed_joint_lump__trunk_collision'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.125 0.19 0.248</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name='base_link_fixed_joint_lump__head_link_collision_1'>
+        <pose>0.07000000000000001 0.0458 0.3 3.141592653589793 1.224646799147353e-16 -1.570796326794897</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.001 0.001</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name='base_link_fixed_joint_lump__imu_link_collision_2'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.001 0.001</size>
+          </box>
+        </geometry>
+        <surface>
+          <contact>
+            <ode/>
+          </contact>
+          <friction>
+            <ode/>
+          </friction>
+        </surface>
+      </collision>
+      <collision name='base_link_fixed_joint_lump__nuc_link_collision_3'>
+        <pose>-0.055 0.08 -0.055 0 0 3.141592653589793</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.001 0.001</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='base_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.001 0.001</size>
+          </box>
+        </geometry>
+      </visual>
+      <visual name='base_link_fixed_joint_lump__trunk_visual_1'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/body.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.125 0.125 0.125 0.55</diffuse>
+          <ambient>0.125 0.125 0.125 0.55</ambient>
+        </material>
+      </visual>
+      <visual name='base_link_fixed_joint_lump__head_link_visual_2'>
+        <pose>0.07000000000000001 0.0458 0.3 3.141592653589793 1.224646799147353e-16 -1.570796326794897</pose>
+        <geometry>
+          <mesh>
+            <scale>0.001 0.001 0.001</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/Head.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.125 0.125 0.125 0.55</diffuse>
+          <ambient>0.125 0.125 0.125 0.55</ambient>
+        </material>
+      </visual>
+      <visual name='base_link_fixed_joint_lump__imu_link_visual_3'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.001 0.001 0.001</size>
+          </box>
+        </geometry>
+        <material>
+          <diffuse>0.125 0.125 0.125 0.55</diffuse>
+          <ambient>0.125 0.125 0.125 0.55</ambient>
+        </material>
+      </visual>
+      <visual name='base_link_fixed_joint_lump__nuc_link_visual_4'>
+        <pose>-0.055 0.08 -0.055 0 0 3.141592653589793</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/NUC_backpack.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.125 0.125 0.125 0.55</diffuse>
+          <ambient>0.125 0.125 0.125 0.55</ambient>
+        </material>
+      </visual>
+      <sensor name='imu_sensor' type='imu'>
+        <always_on>true</always_on>
+        <update_rate>1000</update_rate>
+        <visualize>true</visualize>
+        <topic>/imu</topic>
+        <imu>
+          <angular_velocity>
+            <x>
+              <noise type='gaussian'>
+                <mean>0</mean>
+                <stddev>0.00020000000000000001</stddev>
+                <bias_mean>7.5000000000000002e-06</bias_mean>
+                <bias_stddev>7.9999999999999996e-07</bias_stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type='gaussian'>
+                <mean>0</mean>
+                <stddev>0.00020000000000000001</stddev>
+                <bias_mean>7.5000000000000002e-06</bias_mean>
+                <bias_stddev>7.9999999999999996e-07</bias_stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type='gaussian'>
+                <mean>0</mean>
+                <stddev>0.00020000000000000001</stddev>
+                <bias_mean>7.5000000000000002e-06</bias_mean>
+                <bias_stddev>7.9999999999999996e-07</bias_stddev>
+              </noise>
+            </z>
+          </angular_velocity>
+          <linear_acceleration>
+            <x>
+              <noise type='gaussian'>
+                <mean>0</mean>
+                <stddev>0.017000000000000001</stddev>
+                <bias_mean>0.10000000000000001</bias_mean>
+                <bias_stddev>0.001</bias_stddev>
+              </noise>
+            </x>
+            <y>
+              <noise type='gaussian'>
+                <mean>0</mean>
+                <stddev>0.017000000000000001</stddev>
+                <bias_mean>0.10000000000000001</bias_mean>
+                <bias_stddev>0.001</bias_stddev>
+              </noise>
+            </y>
+            <z>
+              <noise type='gaussian'>
+                <mean>0</mean>
+                <stddev>0.017000000000000001</stddev>
+                <bias_mean>0.10000000000000001</bias_mean>
+                <bias_stddev>0.001</bias_stddev>
+              </noise>
+            </z>
+          </linear_acceleration>
+        </imu>
+        <plugin name='ignition::gazebo::systems::Imu' filename='libignition-gazebo-imu-system.so'/>
+        <pose>0 0 0 0 -0 0</pose>
+      </sensor>
+    </link>
+    <joint name='L_hip_yaw_joint' type='revolute'>
+      <pose relative_to='base_link'>0 0.047 -0.1265 0 0 0</pose>
+      <parent>base_link</parent>
+      <child>L_hip_yaw_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-0.52359877559829882</lower>
+          <upper>0.52359877559829882</upper>
+          <effort>33.5</effort>
+          <velocity>21</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.10000000000000001</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+      <physics>
+        <ode>
+          <limit>
+            <cfm>0</cfm>
+            <erp>0.20000000000000001</erp>
+          </limit>
+        </ode>
+      </physics>
+
+    </joint>
+    <link name='L_hip_yaw_link'>
+      <pose relative_to='L_hip_yaw_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.06518811899313502 0.01056818306636156 -0.05876998627002288 0 0 0</pose>
+        <mass>0.874</mass>
+        <inertia>
+          <ixx>0.00083962526042654414</ixx>
+          <ixy>-0.00015524278014096099</ixy>
+          <ixz>0.00041089241044942743</ixz>
+          <iyy>0.001276880976027457</iyy>
+          <iyz>0.0001318430083221968</iyz>
+          <izz>0.001199172187542334</izz>
+        </inertia>
+      </inertial>
+      <collision name='L_hip_yaw_link_collision'>
+        <pose>0.015 0 -0.002 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.0001 0.0001 0.0001</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name='L_hip_yaw_link_fixed_joint_lump__L_hip_yaw_trans_link_collision_1'>
+        <pose>0.079 0.015 -0.07049999999999999 0 1.570796326794897 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.040000000000000001</length>
+            <radius>0.044999999999999998</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='L_hip_yaw_link_visual'>
+        <pose>0 0 0.02 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/L_hip_yaw.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='L_hip_roll_joint' type='revolute'>
+      <pose relative_to='L_hip_yaw_link'>0.0465 0.015 -0.07049999999999999 0 0 0</pose>
+      <parent>L_hip_yaw_link</parent>
+      <child>L_hip_roll_link</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-0.52359877559829882</lower>
+          <upper>0.52359877559829882</upper>
+          <effort>33.5</effort>
+          <velocity>21</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.10000000000000001</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='L_hip_roll_link'>
+      <pose relative_to='L_hip_roll_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-0.05658471812080537 -0.01439187248322148 0 0 0 0</pose>
+        <mass>0.745</mass>
+        <inertia>
+          <ixx>0.0004917181040828859</ixx>
+          <ixy>-1.058686153322143e-05</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00073156397147080502</iyy>
+          <iyz>6.2143879783576284e-20</iyz>
+          <izz>0.00059356457555369106</izz>
+        </inertia>
+      </inertial>
+      <collision name='L_hip_roll_link_collision'>
+        <pose>-0.1 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1e-05 1e-05 1e-05</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name='L_hip_roll_link_fixed_joint_lump__L_hip_roll_trans_link_collision_1'>
+        <pose>-0.06 -0.015 0 -1.570796326794896 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.040000000000000001</length>
+            <radius>0.044999999999999998</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='L_hip_roll_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/L_hip_roll.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1 1 0 1</diffuse>
+          <ambient>1 1 0 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='L_hip_pitch_joint' type='revolute'>
+      <pose relative_to='L_hip_roll_link'>-0.06 0.018 0 0 0.7853981633974484 0</pose>
+      <parent>L_hip_roll_link</parent>
+      <child>L_hip_pitch_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-3.1400000000000001</lower>
+          <upper>3.1400000000000001</upper>
+          <effort>33.5</effort>
+          <velocity>21</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='L_hip_pitch_link'>
+      <pose relative_to='L_hip_pitch_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-4.859629248197734e-05 0.0442364675592173 -0.05928275695159629 0 0 0</pose>
+        <mass>1.9419999999999999</mass>
+        <inertia>
+          <ixx>0.0094485760881047372</ixx>
+          <ixy>-2.2957860494335731e-06</ixy>
+          <ixz>-2.0605848534500521e-06</ixz>
+          <iyy>0.0096199078252887753</iyy>
+          <iyz>-0.00090346150390731121</iyz>
+          <izz>0.002157651836318949</izz>
+        </inertia>
+      </inertial>
+      <collision name='L_hip_pitch_link_collision'>
+        <pose>0 0.0175 -0.09 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.06 0.035 0.18</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name='L_hip_pitch_link_fixed_joint_lump__L_hip_pitch1_trans_link_collision_1'>
+        <pose>0 0.0625 0 -1.570796326794896 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.040000000000000001</length>
+            <radius>0.044999999999999998</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='L_hip_pitch_link_fixed_joint_lump__L_hip_pitch2_trans_link_collision_2'>
+        <pose>0 0.05 -0.097 -1.570796326794896 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.040000000000000001</length>
+            <radius>0.044999999999999998</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='L_hip_pitch_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/hip_pitch_combined_L2.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='L_knee_joint' type='revolute'>
+      <pose relative_to='L_hip_pitch_link'>0 0 -0.22 0 -1.570796326794897 0</pose>
+      <parent>L_hip_pitch_link</parent>
+      <child>L_knee_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-3.1400000000000001</lower>
+          <upper>3.1400000000000001</upper>
+          <effort>33.5</effort>
+          <velocity>21</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='L_knee_link'>
+      <pose relative_to='L_knee_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 0.020417 -0.1141 0 0 0</pose>
+        <mass>0.30299999999999999</mass>
+        <inertia>
+          <ixx>0.0019109999999999999</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0019103799999999999</iyy>
+          <iyz>0</iyz>
+          <izz>6.8351999999999999e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='L_knee_link_collision'>
+        <pose>0 0.015 -0.11 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.20000000000000001</length>
+            <radius>0.02</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='L_knee_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/knee_combined_L.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='L_ankle_joint' type='revolute'>
+      <pose relative_to='L_knee_link'>0 0 -0.22 0 0.7853981633974484 0</pose>
+      <parent>L_knee_link</parent>
+      <child>L_ankle_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-1.3999999999999999</lower>
+          <upper>1.3999999999999999</upper>
+          <effort>33.5</effort>
+          <velocity>21</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='L_ankle_link'>
+      <pose relative_to='L_ankle_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.01056406352171882 0.01794967772069127 -0.01712868752919197 0 0 0</pose>
+        <mass>0.21410000000000001</mass>
+        <inertia>
+          <ixx>5.7450544578958412e-05</ixx>
+          <ixy>1.015328456170129e-07</ixy>
+          <ixz>7.5827309849602889e-08</ixz>
+          <iyy>0.00029091549929593179</iyy>
+          <iyz>1.033186274395053e-07</iyz>
+          <izz>0.00024960237560049892</izz>
+        </inertia>
+      </inertial>
+      <collision name='L_ankle_link_fixed_joint_lump__L_foot_collision_collision'>
+        <pose>0.01 0.0194 -0.02 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.15 0.02 0.04</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='L_ankle_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/foot_L2.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+      <visual name='L_ankle_link_fixed_joint_lump__L_leg_EE_link_visual_1'>
+        <pose>0 0.0194 -0.04 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.01</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+
+    </link>
+    <joint name='L_shoulder_yaw_joint' type='revolute'>
+      <pose relative_to='base_link'>0 0.047 0.1725 0 0 0</pose>
+      <parent>base_link</parent>
+      <child>L_shoulder_yaw_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1.3999999999999999</lower>
+          <upper>1.5708</upper>
+          <effort>17</effort>
+          <velocity>33</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.10000000000000001</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='L_shoulder_yaw_link'>
+      <pose relative_to='L_shoulder_yaw_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.00071 0.02838 0.04835 0 0 1.570796</pose>
+        <mass>0.43559999999999999</mass>
+        <inertia>
+          <ixx>0.00042999999999999999</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00035</iyy>
+          <iyz>0</iyz>
+          <izz>0.00027</izz>
+        </inertia>
+      </inertial>
+      <collision name='L_shoulder_yaw_link_collision'>
+        <pose>0 -0.021 0 1.570796326794896 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.080000000000000002</length>
+            <radius>0.041000000000000002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='L_shoulder_yaw_link_visual'>
+        <pose>0 0 -0.062 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/hector_arm/ShoulderYaw_L.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='L_shoulder_pitch_joint' type='revolute'>
+      <pose relative_to='L_shoulder_yaw_link'>0 0.045 -0.018 0 0 0</pose>
+      <parent>L_shoulder_yaw_link</parent>
+      <child>L_shoulder_pitch_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-3.1400000000000001</lower>
+          <upper>1.5708</upper>
+          <effort>17</effort>
+          <velocity>33</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.10000000000000001</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='L_shoulder_pitch_link'>
+      <pose relative_to='L_shoulder_pitch_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-0.0294 0.04541 0.0008899999999999999 0 0 0</pose>
+        <mass>0.432</mass>
+        <inertia>
+          <ixx>0.00042000000000000002</ixx>
+          <ixy>-2.0000000000000002e-05</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00027</iyy>
+          <iyz>0</iyz>
+          <izz>0.00033</izz>
+        </inertia>
+      </inertial>
+      <collision name='L_shoulder_pitch_link_collision'>
+        <pose>0 0 -0.125 0 1.570796326794897 0</pose>
+        <geometry>
+          <box>
+            <size>0.25 0.034 0.043</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='L_shoulder_pitch_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/hector_arm/ShoulderPitch_L.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1 1 0 1</diffuse>
+          <ambient>1 1 0 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='L_shoulder_roll_joint' type='revolute'>
+      <pose relative_to='L_shoulder_pitch_link'>-0.0135 0.045 0 0 0 0</pose>
+      <parent>L_shoulder_pitch_link</parent>
+      <child>L_shoulder_roll_link</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-1.3999999999999999</lower>
+          <upper>1.3999999999999999</upper>
+          <effort>17</effort>
+          <velocity>33</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.10000000000000001</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='L_shoulder_roll_link'>
+      <pose relative_to='L_shoulder_roll_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.04492 0.01006 -0.03218 0 0 0</pose>
+        <mass>0.66483999999999999</mass>
+        <inertia>
+          <ixx>0.0031800000000000001</ixx>
+          <ixy>1.0000000000000001e-05</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0032499999999999999</iyy>
+          <iyz>0.00036999999999999999</iyz>
+          <izz>0.00048999999999999998</izz>
+        </inertia>
+      </inertial>
+      <collision name='L_shoulder_roll_link_collision'>
+        <pose>0.04 0 -0.125 0 1.570796326794897 0</pose>
+        <geometry>
+          <box>
+            <size>0.25 0.034 0.043</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='L_shoulder_roll_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/hector_arm/UpperArmRoll_L.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='L_elbow_joint' type='revolute'>
+      <pose relative_to='L_shoulder_roll_link'>0.04 0 -0.2 0 0 0</pose>
+      <parent>L_shoulder_roll_link</parent>
+      <child>L_elbow_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-2.7799999999999998</lower>
+          <upper>2.6299999999999999</upper>
+          <effort>24.09</effort>
+          <velocity>23.289999999999999</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.10000000000000001</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='L_elbow_link'>
+      <pose relative_to='L_elbow_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 7.994933502216595e-05 -0.1172724255858138 0 0 0</pose>
+        <mass>0.15790000000000001</mass>
+        <inertia>
+          <ixx>0.0012907848195005951</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.001300784818861</iyy>
+          <iyz>-6.6182059531364658e-10</iyz>
+          <izz>2.0100000639594681e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='L_elbow_link_collision'>
+        <pose>0 0 -0.125 0 1.570796326794897 0</pose>
+        <geometry>
+          <box>
+            <size>0.25 0.016 0.016</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='L_elbow_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/hector_arm/ForeArmPitch.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+      <visual name='L_elbow_link_fixed_joint_lump__L_arm_EE_link_visual_1'>
+        <pose>0 0 -0.2 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.01</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='R_hip_yaw_joint' type='revolute'>
+      <pose relative_to='base_link'>0 -0.047 -0.1265 0 0 0</pose>
+      <parent>base_link</parent>
+      <child>R_hip_yaw_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-0.52359877559829882</lower>
+          <upper>0.52359877559829882</upper>
+          <effort>33.5</effort>
+          <velocity>21</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.10000000000000001</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='R_hip_yaw_link'>
+      <pose relative_to='R_hip_yaw_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.06518811899313502 -0.01174302974828375 -0.05876998627002288 0 0 0</pose>
+        <mass>0.874</mass>
+        <inertia>
+          <ixx>0.00081671575012906127</ixx>
+          <ixy>0.0001140888994929061</ixy>
+          <ixz>0.00041089241044942743</ixz>
+          <iyy>0.001276880976027457</iyy>
+          <iyz>-9.6892259412356837e-05</iyz>
+          <izz>0.0011762626772448511</izz>
+        </inertia>
+      </inertial>
+      <collision name='R_hip_yaw_link_collision'>
+        <pose>0.015 0 -0.002 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.0001 0.0001 0.0001</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name='R_hip_yaw_link_fixed_joint_lump__R_hip_yaw_trans_link_collision_1'>
+        <pose>0.079 -0.015 -0.07049999999999999 0 1.570796326794897 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.040000000000000001</length>
+            <radius>0.044999999999999998</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='R_hip_yaw_link_visual'>
+        <pose>0 0 0.02 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/R_hip_yaw.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='R_hip_roll_joint' type='revolute'>
+      <pose relative_to='R_hip_yaw_link'>0.0465 -0.015 -0.07049999999999999 0 0 0</pose>
+      <parent>R_hip_yaw_link</parent>
+      <child>R_hip_roll_link</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-0.52359877559829882</lower>
+          <upper>0.52359877559829882</upper>
+          <effort>33.5</effort>
+          <velocity>21</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.10000000000000001</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='R_hip_roll_link'>
+      <pose relative_to='R_hip_roll_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-0.05658471812080537 0.01178262416107383 0 0 0 0</pose>
+        <mass>0.745</mass>
+        <inertia>
+          <ixx>0.00054259844636476507</ixx>
+          <ixy>5.6011135111073821e-05</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00073156397147080502</iyy>
+          <iyz>6.2143879783576284e-20</iyz>
+          <izz>0.00064444491783557023</izz>
+        </inertia>
+      </inertial>
+      <collision name='R_hip_roll_link_collision'>
+        <pose>-0.1 0 0 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>1e-05 1e-05 1e-05</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name='R_hip_roll_link_fixed_joint_lump__R_hip_roll_trans_link_collision_1'>
+        <pose>-0.06 0.015 0 -1.570796326794896 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.040000000000000001</length>
+            <radius>0.044999999999999998</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='R_hip_roll_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/R_hip_roll.STL</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1 1 0 1</diffuse>
+          <ambient>1 1 0 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='R_hip_pitch_joint' type='revolute'>
+      <pose relative_to='R_hip_roll_link'>-0.06 -0.018 0 0 0.7853981633974484 0</pose>
+      <parent>R_hip_roll_link</parent>
+      <child>R_hip_pitch_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-3.1400000000000001</lower>
+          <upper>3.1400000000000001</upper>
+          <effort>33.5</effort>
+          <velocity>21</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='R_hip_pitch_link'>
+      <pose relative_to='R_hip_pitch_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-4.859629248197734e-05 -0.0442364675592173 -0.05928275695159629 0 0 0</pose>
+        <mass>1.9419999999999999</mass>
+        <inertia>
+          <ixx>0.0094485760881047372</ixx>
+          <ixy>2.2957860494335731e-06</ixy>
+          <ixz>-2.0605848534500521e-06</ixz>
+          <iyy>0.0096199078252887753</iyy>
+          <iyz>0.00090346150390731121</iyz>
+          <izz>0.002157651836318949</izz>
+        </inertia>
+      </inertial>
+      <collision name='R_hip_pitch_link_collision'>
+        <pose>0 -0.0175 -0.09 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.06 0.035 0.18</size>
+          </box>
+        </geometry>
+      </collision>
+      <collision name='R_hip_pitch_link_fixed_joint_lump__R_hip_pitch1_trans_link_collision_1'>
+        <pose>0 -0.0625 0 -1.570796326794896 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.040000000000000001</length>
+            <radius>0.044999999999999998</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <collision name='R_hip_pitch_link_fixed_joint_lump__R_hip_pitch2_trans_link_collision_2'>
+        <pose>0 -0.05 -0.097 -1.570796326794896 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.040000000000000001</length>
+            <radius>0.044999999999999998</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='R_hip_pitch_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/hip_pitch_combined_R2.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='R_knee_joint' type='revolute'>
+      <pose relative_to='R_hip_pitch_link'>0 0 -0.22 0 -1.570796326794897 0</pose>
+      <parent>R_hip_pitch_link</parent>
+      <child>R_knee_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-3.1400000000000001</lower>
+          <upper>3.1400000000000001</upper>
+          <effort>33.5</effort>
+          <velocity>21</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='R_knee_link'>
+      <pose relative_to='R_knee_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 -0.020417 -0.1141 0 0 0</pose>
+        <mass>0.30299999999999999</mass>
+        <inertia>
+          <ixx>0.0019109999999999999</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0019103799999999999</iyy>
+          <iyz>0</iyz>
+          <izz>6.8351999999999999e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='R_knee_link_collision'>
+        <pose>0 -0.015 -0.11 0 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.20000000000000001</length>
+            <radius>0.02</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='R_knee_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/knee_combined_R.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='R_ankle_joint' type='revolute'>
+      <pose relative_to='R_knee_link'>0 0 -0.22 0 0.7853981633974484 0</pose>
+      <parent>R_knee_link</parent>
+      <child>R_ankle_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-1.3999999999999999</lower>
+          <upper>1.3999999999999999</upper>
+          <effort>33.5</effort>
+          <velocity>21</velocity>
+        </limit>
+        <dynamics>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='R_ankle_link'>
+      <pose relative_to='R_ankle_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.01056406352171882 -0.01794967772069127 -0.01712868752919197 0 0 0</pose>
+        <mass>0.21410000000000001</mass>
+        <inertia>
+          <ixx>5.7450544578958412e-05</ixx>
+          <ixy>9.8467154382991936e-08</ixy>
+          <ixz>7.5827309849602889e-08</ixz>
+          <iyy>0.00029091549929593179</iyy>
+          <iyz>9.6681372560485979e-08</iyz>
+          <izz>0.00024960237560049892</izz>
+        </inertia>
+      </inertial>
+      <collision name='R_ankle_link_fixed_joint_lump__R_foot_collision_collision'>
+        <pose>0.01 -0.0194 -0.02 0 0 0</pose>
+        <geometry>
+          <box>
+            <size>0.15 0.02 0.04</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='R_ankle_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/foot_R2.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+      <visual name='R_ankle_link_fixed_joint_lump__R_leg_EE_link_visual_1'>
+        <pose>0 -0.0194 -0.04 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.01</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+
+
+    </link>
+
+    <joint name='R_shoulder_yaw_joint' type='revolute'>
+      <pose relative_to='base_link'>0 -0.047 0.1725 0 0 0</pose>
+      <parent>base_link</parent>
+      <child>R_shoulder_yaw_link</child>
+      <axis>
+        <xyz>0 0 1</xyz>
+        <limit>
+          <lower>-1.5708</lower>
+          <upper>1.3999999999999999</upper>
+          <effort>17</effort>
+          <velocity>33</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.10000000000000001</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='R_shoulder_yaw_link'>
+      <pose relative_to='R_shoulder_yaw_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.00071 -0.02838 0.04835 0 0 1.570796</pose>
+        <mass>0.43559999999999999</mass>
+        <inertia>
+          <ixx>0.00042999999999999999</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00035</iyy>
+          <iyz>0</iyz>
+          <izz>0.00027</izz>
+        </inertia>
+      </inertial>
+      <collision name='R_shoulder_yaw_link_collision'>
+        <pose>0 0.021 0 1.570796326794896 0 0</pose>
+        <geometry>
+          <cylinder>
+            <length>0.080000000000000002</length>
+            <radius>0.041000000000000002</radius>
+          </cylinder>
+        </geometry>
+      </collision>
+      <visual name='R_shoulder_yaw_link_visual'>
+        <pose>0 0 -0.062 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/hector_arm/ShoulderYaw_R.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='R_shoulder_pitch_joint' type='revolute'>
+      <pose relative_to='R_shoulder_yaw_link'>0 -0.045 -0.018 0 0 0</pose>
+      <parent>R_shoulder_yaw_link</parent>
+      <child>R_shoulder_pitch_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-3.1400000000000001</lower>
+          <upper>1.5708</upper>
+          <effort>17</effort>
+          <velocity>33</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.10000000000000001</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='R_shoulder_pitch_link'>
+      <pose relative_to='R_shoulder_pitch_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>-0.0294 -0.04541 0.0008899999999999999 0 0 0</pose>
+        <mass>0.432</mass>
+        <inertia>
+          <ixx>0.00042000000000000002</ixx>
+          <ixy>2.0000000000000002e-05</ixy>
+          <ixz>0</ixz>
+          <iyy>0.00027</iyy>
+          <iyz>0</iyz>
+          <izz>0.00033</izz>
+        </inertia>
+      </inertial>
+      <collision name='R_shoulder_pitch_link_collision'>
+        <pose>0 0 -0.125 0 1.570796326794897 0</pose>
+        <geometry>
+          <box>
+            <size>0.25 0.034 0.043</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='R_shoulder_pitch_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/hector_arm/ShoulderPitch_R.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>1 1 0 1</diffuse>
+          <ambient>1 1 0 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='R_shoulder_roll_joint' type='revolute'>
+      <pose relative_to='R_shoulder_pitch_link'>-0.0135 -0.045 0 0 0 0</pose>
+      <parent>R_shoulder_pitch_link</parent>
+      <child>R_shoulder_roll_link</child>
+      <axis>
+        <xyz>1 0 0</xyz>
+        <limit>
+          <lower>-1.3999999999999999</lower>
+          <upper>1.3999999999999999</upper>
+          <effort>17</effort>
+          <velocity>33</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.10000000000000001</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='R_shoulder_roll_link'>
+      <pose relative_to='R_shoulder_roll_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0.04492 -0.01006 -0.03218 0 0 0</pose>
+        <mass>0.66483999999999999</mass>
+        <inertia>
+          <ixx>0.0031800000000000001</ixx>
+          <ixy>-1.0000000000000001e-05</ixy>
+          <ixz>0</ixz>
+          <iyy>0.0032499999999999999</iyy>
+          <iyz>-0.00036999999999999999</iyz>
+          <izz>0.00048999999999999998</izz>
+        </inertia>
+      </inertial>
+      <collision name='R_shoulder_roll_link_collision'>
+        <pose>0.04 0 -0.125 0 1.570796326794897 0</pose>
+        <geometry>
+          <box>
+            <size>0.25 0.034 0.043</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='R_shoulder_roll_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/hector_arm/UpperArmRoll_R.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <joint name='R_elbow_joint' type='revolute'>
+      <pose relative_to='R_shoulder_roll_link'>0.04 0 -0.2 0 0 0</pose>
+      <parent>R_shoulder_roll_link</parent>
+      <child>R_elbow_link</child>
+      <axis>
+        <xyz>0 1 0</xyz>
+        <limit>
+          <lower>-2.7799999999999998</lower>
+          <upper>2.6299999999999999</upper>
+          <effort>24.09</effort>
+          <velocity>23.289999999999999</velocity>
+        </limit>
+        <dynamics>
+          <damping>0.10000000000000001</damping>
+          <friction>0</friction>
+          <spring_reference>0</spring_reference>
+          <spring_stiffness>0</spring_stiffness>
+        </dynamics>
+      </axis>
+    </joint>
+    <link name='R_elbow_link'>
+      <pose relative_to='R_elbow_joint'>0 0 0 0 0 0</pose>
+      <inertial>
+        <pose>0 7.994933502216595e-05 -0.1172724255858138 0 0 0</pose>
+        <mass>0.15790000000000001</mass>
+        <inertia>
+          <ixx>0.0012907848195005951</ixx>
+          <ixy>0</ixy>
+          <ixz>0</ixz>
+          <iyy>0.001300784818861</iyy>
+          <iyz>-6.6182059531364658e-10</iyz>
+          <izz>2.0100000639594681e-05</izz>
+        </inertia>
+      </inertial>
+      <collision name='R_elbow_link_collision'>
+        <pose>0 0 -0.125 0 1.570796326794897 0</pose>
+        <geometry>
+          <box>
+            <size>0.25 0.016 0.016</size>
+          </box>
+        </geometry>
+      </collision>
+      <visual name='R_elbow_link_visual'>
+        <pose>0 0 0 0 0 0</pose>
+        <geometry>
+          <mesh>
+            <scale>1 1 1</scale>
+            <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/hector_arm/ForeArmPitch.stl</uri>
+          </mesh>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+      <visual name='R_elbow_link_fixed_joint_lump__R_arm_EE_link_visual_1'>
+        <pose>0 0 -0.2 0 0 0</pose>
+        <geometry>
+          <sphere>
+            <radius>0.01</radius>
+          </sphere>
+        </geometry>
+        <material>
+          <diffuse>0.25 0.25 0.25 1</diffuse>
+          <ambient>0.25 0.25 0.25 1</ambient>
+        </material>
+      </visual>
+    </link>
+    <plugin name='hector_gazebo_plugins::HectorGazeboFortressPlugin' filename='/home/cl/CLionProjects/hector_gazebo/install/hector_gazebo_fortress_plugin/lib/libhector_gazebo_fortress_plugin.so'>
+      <joint_name>L_hip_yaw_joint</joint_name>
+      <joint_name>L_hip_roll_joint</joint_name>
+      <joint_name>L_hip_pitch_joint</joint_name>
+      <joint_name>L_knee_joint</joint_name>
+      <joint_name>L_ankle_joint</joint_name>
+      <joint_name>R_hip_yaw_joint</joint_name>
+      <joint_name>R_hip_roll_joint</joint_name>
+      <joint_name>R_hip_pitch_joint</joint_name>
+      <joint_name>R_knee_joint</joint_name>
+      <joint_name>R_ankle_joint</joint_name>
+      <joint_name>L_shoulder_yaw_joint</joint_name>
+      <joint_name>L_shoulder_pitch_joint</joint_name>
+      <joint_name>L_shoulder_roll_joint</joint_name>
+      <joint_name>L_elbow_joint</joint_name>
+      <joint_name>R_shoulder_yaw_joint</joint_name>
+      <joint_name>R_shoulder_pitch_joint</joint_name>
+      <joint_name>R_shoulder_roll_joint</joint_name>
+      <joint_name>R_elbow_joint</joint_name>
+      <base_link_name>base_link</base_link_name>
+      <ign_joint_state_topic>/world/default/model/hector_description/joint_state</ign_joint_state_topic>
+      <ign_imu_topic>/imu</ign_imu_topic>
+      <ign_left_contact_topic>/l_contact</ign_left_contact_topic>
+      <ign_right_contact_topic>/r_contact</ign_right_contact_topic>
+    </plugin>
+    <frame name='head' attached_to='trunk'>
+      <pose>0.07 0.0458 0.3 3.14159 0 -1.5708</pose>
+    </frame>
+    <frame name='head_link' attached_to='head'/>
+    <frame name='imu_joint' attached_to='trunk'>
+      <pose>0 0 0 0 -0 0</pose>
+    </frame>
+    <frame name='imu_link' attached_to='imu_joint'/>
+    <frame name='nuc_joint' attached_to='trunk'>
+      <pose>-0.055 0.08 -0.055 0 -0 3.14159</pose>
+    </frame>
+    <frame name='nuc_link' attached_to='nuc_joint'/>
+    <frame name='floating_base' attached_to='base_link'>
+      <pose>0 0 0 0 -0 0</pose>
+    </frame>
+    <frame name='trunk' attached_to='floating_base'/>
+    <frame name='L_hip_yaw_trans_joint' attached_to='L_hip_yaw_link'>
+      <pose>0.079 0.015 -0.0705 0 -0 0</pose>
+    </frame>
+    <frame name='L_hip_yaw_trans_link' attached_to='L_hip_yaw_trans_joint'/>
+    <frame name='L_hip_roll_trans_joint' attached_to='L_hip_roll_link'>
+      <pose>-0.06 -0.015 0 0 -0 0</pose>
+    </frame>
+    <frame name='L_hip_roll_trans_link' attached_to='L_hip_roll_trans_joint'/>
+    <frame name='L_hip_pitch1_trans_joint' attached_to='L_hip_pitch_link'>
+      <pose>0 0.0625 0 0 -0 0</pose>
+    </frame>
+    <frame name='L_hip_pitch1_trans_link' attached_to='L_hip_pitch1_trans_joint'/>
+    <frame name='L_hip_pitch2_trans_joint' attached_to='L_hip_pitch_link'>
+      <pose>0 -0.0225 -0.097 0 -0 0</pose>
+    </frame>
+    <frame name='L_hip_pitch2_trans_link' attached_to='L_hip_pitch2_trans_joint'/>
+    <frame name='L_leg_EE_joint' attached_to='L_ankle_link'>
+      <pose>0 0.0194 -0.04 0 -0 0</pose>
+    </frame>
+    <frame name='L_leg_EE_link' attached_to='L_leg_EE_joint'/>
+    <frame name='L_arm_EE_joint' attached_to='L_elbow_link'>
+      <pose>0 0 -0.2 0 -0 0</pose>
+    </frame>
+    <frame name='L_arm_EE_link' attached_to='L_arm_EE_joint'/>
+    <frame name='R_hip_yaw_trans_joint' attached_to='R_hip_yaw_link'>
+      <pose>0.079 -0.015 -0.0705 0 -0 0</pose>
+    </frame>
+    <frame name='R_hip_yaw_trans_link' attached_to='R_hip_yaw_trans_joint'/>
+    <frame name='R_hip_roll_trans_joint' attached_to='R_hip_roll_link'>
+      <pose>-0.06 0.015 0 0 -0 0</pose>
+    </frame>
+    <frame name='R_hip_roll_trans_link' attached_to='R_hip_roll_trans_joint'/>
+    <frame name='R_hip_pitch1_trans_joint' attached_to='R_hip_pitch_link'>
+      <pose>0 -0.0625 0 0 -0 0</pose>
+    </frame>
+    <frame name='R_hip_pitch1_trans_link' attached_to='R_hip_pitch1_trans_joint'/>
+    <frame name='R_hip_pitch2_trans_joint' attached_to='R_hip_pitch_link'>
+      <pose>0 0.0225 -0.097 0 -0 0</pose>
+    </frame>
+    <frame name='R_hip_pitch2_trans_link' attached_to='R_hip_pitch2_trans_joint'/>
+    <frame name='R_leg_EE_joint' attached_to='R_ankle_link'>
+      <pose>0 -0.0194 -0.04 0 -0 0</pose>
+    </frame>
+    <frame name='R_leg_EE_link' attached_to='R_leg_EE_joint'/>
+    <frame name='R_arm_EE_joint' attached_to='R_elbow_link'>
+      <pose>0 0 -0.2 0 -0 0</pose>
+    </frame>
+    <frame name='R_arm_EE_link' attached_to='R_arm_EE_joint'/>
+  </model>
+</sdf>
