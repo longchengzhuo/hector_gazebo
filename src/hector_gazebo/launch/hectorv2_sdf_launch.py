@@ -22,7 +22,7 @@ else:
     print(f"Using SDF file: {sdf_file_path}")
 
 # --- Removed XACRO processing block ---
-world_file_name = 'empty.sdf'
+world_file_name = 'world.sdf'
 world_path = os.path.join(hector_gazebo_pkg_path, 'assets', 'models', 'worlds', world_file_name)
 if not os.path.exists(world_path):
     print(f"Warning: World file not found: {world_path}. Gazebo Sim will try to load default world.")
