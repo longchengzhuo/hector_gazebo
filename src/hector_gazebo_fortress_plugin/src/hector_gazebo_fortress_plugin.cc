@@ -392,31 +392,37 @@ namespace hector_gazebo_plugins {
     void HectorGazeboFortressPlugin::ApplyControl(ignition::gazebo::EntityComponentManager &_ecm)
     {
         std::lock_guard<std::mutex> lock(cmdMutex_);
-        const double no_cmd_torque = 0.00;
+        const double no_cmd_torque = 1.00;
 
         // Check if we have a valid command
-        if (!lastRosCmd_.has_value()) {
-            ignition::common::Console::err << "No ROS command received yet. Creating default command." << std::endl;
+        // if (!lastRosCmd_.has_value()) {
+        //     ignition::common::Console::err << "No ROS command received yet. Creating default command." << std::endl;
+        //
+        //     lastRosCmd_.emplace(); // 调用默认构造函数
+        //
+        //     if (lastRosCmd_.has_value()) {
+        //         for (size_t i = 0; i < jointEntities_.size(); ++i) {
+        //             lastRosCmd_->motor_command[i].q = 1.0;    // 默认目标位置
+        //             lastRosCmd_->motor_command[i].dq = 0.0;   // 默认目标速度
+        //             lastRosCmd_->motor_command[i].kp = 1.0;   // 默认 Kp (可能需要一个小的阻尼?)
+        //             lastRosCmd_->motor_command[i].kd = 1.0;   // 默认 Kd (提供一些阻尼)
+        //             lastRosCmd_->motor_command[i].tau = 0.0;   // 默认前馈力矩
+        //         }
+        //         ignition::common::Console::err << "----------------Applied default values to newly created command.-------------------" << std::endl;
+        //     } else {
+        //         ignition::common::Console::err << "Failed to emplace a default RobotCommand!" << std::endl;
+        //         for (size_t i = 0; i < jointEntities_.size(); ++i) {
+        //             _ecm.SetComponentData<ignition::gazebo::components::JointForceCmd>(jointEntities_[i], {no_cmd_torque});
+        //         }
+        //         return;
+        //     }
+        // }
+        for (size_t i = 0; i < jointEntities_.size(); ++i) {
+            _ecm.SetComponentData<ignition::gazebo::components::JointForceCmd>(jointEntities_[i], {no_cmd_torque});
+            ignition::common::Console::err << "Applying torque " << no_cmd_torque << " to " << jointNames_[i] << std::endl; // Debug
 
-            lastRosCmd_.emplace(); // 调用默认构造函数
-
-            if (lastRosCmd_.has_value()) {
-                for (size_t i = 0; i < jointEntities_.size(); ++i) {
-                    lastRosCmd_->motor_command[i].q = 1.0;    // 默认目标位置
-                    lastRosCmd_->motor_command[i].dq = 0.0;   // 默认目标速度
-                    lastRosCmd_->motor_command[i].kp = 1.0;   // 默认 Kp (可能需要一个小的阻尼?)
-                    lastRosCmd_->motor_command[i].kd = 1.0;   // 默认 Kd (提供一些阻尼)
-                    lastRosCmd_->motor_command[i].tau = 0.0;   // 默认前馈力矩
-                }
-                ignition::common::Console::err << "----------------Applied default values to newly created command.-------------------" << std::endl;
-            } else {
-                ignition::common::Console::err << "Failed to emplace a default RobotCommand!" << std::endl;
-                for (size_t i = 0; i < jointEntities_.size(); ++i) {
-                    _ecm.SetComponentData<ignition::gazebo::components::JointForceCmd>(jointEntities_[i], {no_cmd_torque});
-                }
-                return;
-            }
         }
+        return;
         const auto& current_cmd = lastRosCmd_.value();
 
         // Verify command size matches number of joints
@@ -472,7 +478,7 @@ namespace hector_gazebo_plugins {
             // Apply the calculated torque using OneTimeChange for efficiency
             _ecm.SetComponentData<ignition::gazebo::components::JointForceCmd>(
                 jointEntity, {torque_cmd});
-            // ignition::common::Console::err << "Applying torque " << torque_cmd << " to " << jointNames_[i] << std::endl; // Debug
+            ignition::common::Console::err << "Applying torque " << torque_cmd << " to " << jointNames_[i] << std::endl; // Debug
         }
 
         // Optional: Reset command after applying if you want each command to be used only once.
@@ -690,7 +696,9 @@ namespace hector_gazebo_plugins {
     void HectorGazeboFortressPlugin::IgnRightContactCallback(const ignition::msgs::Contacts &_msg)
     {
         // Check for contact with the specified ground collision object
-         bool contact_with_ground = false;
+        ignition::common::Console::err << "diaole" << std::endl;
+
+        bool contact_with_ground = false;
         for (int i = 0; i < _msg.contact_size(); ++i) {
             const auto& contact = _msg.contact(i);
             if (contact.collision1().name().find(this->groundCollisionName_) != std::string::npos ||

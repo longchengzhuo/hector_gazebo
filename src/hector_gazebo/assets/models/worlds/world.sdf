@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <sdf version="1.8">
   <world name="default">
-    <gravity>0 0 0</gravity>
+    <gravity>0 0 -9.81</gravity>
     <physics name="1ms" type="ignored">
       <max_step_size>0.001</max_step_size>
       <real_time_factor>1.0</real_time_factor>
@@ -349,7 +349,7 @@
     <plugin filename="gz-sim-triggered-publisher-system"
             name="gz::sim::systems::TriggeredPublisher">
       <input type="ignition.msgs.Int32" topic="/keyboard/keypress">
-        <match field="data">81</match> <!-- ASCII码 'q' = 113 -->
+        <match field="data">81</match>
       </input>
       <output type="ignition.msgs.Empty" topic="/model/anchor/detachable_joint/detach"/>
     </plugin>
@@ -565,6 +565,16 @@
         </sensor>
       </link>
       <joint name='L_hip_yaw_joint' type='revolute'>
+        <sensor name="L_hip_yaw_joint_force_torque" type="force_torque">
+          <always_on>true</always_on>
+          <update_rate>30</update_rate>
+          <visualize>true</visualize>
+          <topic>L_hip_yaw_joint/force_torque</topic>
+          <force_torque>
+            <frame>child</frame>
+            <measure_direction>child_to_parent</measure_direction>
+          </force_torque>
+        </sensor>
         <pose relative_to='base_link'>0 0.047 -0.1265 0 0 0</pose>
         <parent>base_link</parent>
         <child>L_hip_yaw_link</child>
@@ -639,6 +649,16 @@
         </visual>
       </link>
       <joint name='L_hip_roll_joint' type='revolute'>
+        <sensor name="L_hip_roll_joint_force_torque" type="force_torque">
+          <always_on>true</always_on>
+          <update_rate>30</update_rate>
+          <visualize>true</visualize>
+          <topic>L_hip_roll_joint/force_torque</topic>
+          <force_torque>
+            <frame>child</frame>
+            <measure_direction>child_to_parent</measure_direction>
+          </force_torque>
+        </sensor>
         <pose relative_to='L_hip_yaw_link'>0.0465 0.015 -0.07049999999999999 0 0 0</pose>
         <parent>L_hip_yaw_link</parent>
         <child>L_hip_roll_link</child>
@@ -1733,8 +1753,8 @@
         <base_link_name>base_link</base_link_name>
         <ign_joint_state_topic>/world/default/model/hector_description/joint_state</ign_joint_state_topic>
         <ign_imu_topic>/imu</ign_imu_topic>
-        <ign_left_contact_topic>/l_contact</ign_left_contact_topic>
-        <ign_right_contact_topic>/r_contact</ign_right_contact_topic>
+        <ign_left_contact_topic>/world/default/model/hector_v2/link/L_ankle_link/sensor/L_ankle_link/contact</ign_left_contact_topic>
+        <ign_right_contact_topic>/world/default/model/hector_v2/link/R_ankle_link/sensor/R_ankle_link/contact</ign_right_contact_topic>
       </plugin>
       <frame name='head' attached_to='trunk'>
         <pose>0.07 0.0458 0.3 3.14159 0 -1.5708</pose>
