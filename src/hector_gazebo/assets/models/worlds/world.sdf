@@ -357,7 +357,7 @@
     <!-- 高空锚点 -->
     <model name="anchor">
       <static>false</static>
-      <pose>0 0 2.5 0 0 0</pose>
+      <pose>5 5 2.5 0 0 0</pose>
       <link name="anchor_link">
         <inertial>
           <mass>100.0</mass>
@@ -574,7 +574,7 @@
 
 
     <model name='hector_v2'>
-      <pose relative_to='world'>0 0 1.05 0 0 0</pose>
+      <pose relative_to='world'>5 5 0.65 0 0 0</pose>
       <link name='base_link'>
         <inertial>
           <pose>2.630194634402946e-06 2.20585656671927e-05 4.29598456952481e-05 0 0 0</pose>
@@ -1937,7 +1937,8 @@
         <joint_name>R_shoulder_roll_joint</joint_name>
         <joint_name>R_elbow_joint</joint_name>
         <base_link_name>base_link</base_link_name>
-        <ign_joint_state_topic>/world/default/model/hector_description/joint_state</ign_joint_state_topic>
+        <l_foot_link_name>L_ankle_link</l_foot_link_name>
+        <r_foot_link_name>R_ankle_link</r_foot_link_name>
         <ign_imu_topic>/imu</ign_imu_topic>
         <ign_left_contact_topic>/world/default/model/hector_v2/link/L_ankle_link/sensor/L_ankle_link/contact</ign_left_contact_topic>
         <ign_right_contact_topic>/world/default/model/hector_v2/link/R_ankle_link/sensor/R_ankle_link/contact</ign_right_contact_topic>

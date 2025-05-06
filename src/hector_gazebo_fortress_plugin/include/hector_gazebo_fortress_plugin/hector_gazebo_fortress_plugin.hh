@@ -78,9 +78,14 @@ private:
     // Model and Entities
     ignition::gazebo::Entity modelEntity_{ignition::gazebo::kNullEntity};
     ignition::gazebo::Entity baseLinkEntity_{ignition::gazebo::kNullEntity};
+    ignition::gazebo::Entity lFootLInkEntity_{ignition::gazebo::kNullEntity};
+    ignition::gazebo::Entity rFootLInkEntity_{ignition::gazebo::kNullEntity};
     std::vector<ignition::gazebo::Entity> jointEntities_;
     std::vector<std::string> jointNames_;
     std::string baseLinkName_;
+    std::string lFootLInkName_;
+    std::string rFootLInkName_;
+
     size_t numJoints_{0};
     std::vector<std::vector<double>> jointForces_;
 
