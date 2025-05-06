@@ -10,7 +10,6 @@
 #include <ignition/gazebo/components/JointVelocity.hh>
 #include <ignition/gazebo/components/JointForceCmd.hh>
 #include <ignition/gazebo/components/JointForce.hh>
-
 #include <ignition/gazebo/Model.hh>
 #include <ignition/gazebo/Util.hh>
 
@@ -35,6 +34,7 @@ namespace hector_gazebo_plugins {
         if (!rclcpp::ok()) {
             rclcpp::init(0, nullptr);
         }
+        jointForces_.clear();
     }
 
     HectorGazeboFortressPlugin::~HectorGazeboFortressPlugin()
@@ -328,6 +328,10 @@ namespace hector_gazebo_plugins {
             return false;
         }
 
+        this->jointForces_.resize(this->jointEntities_.size());
+        for (auto &force : this->jointForces_) {
+            force.resize(1, 0.0);  // 默认每个关节只有一个力分量
+        }
         this->entitiesFound_ = true;
         ignition::common::Console::warn << "All required entities (base link and " << this->jointEntities_.size() << " joints) found." << std::endl;
         return true;
@@ -371,6 +375,21 @@ namespace hector_gazebo_plugins {
         ApplyControl(_ecm);
     }
 
+    void HectorGazeboFortressPlugin::Update(const ignition::gazebo::UpdateInfo &_info,
+                                           ignition::gazebo::EntityComponentManager &_ecm)
+    {
+        // 检查初始化状态
+        if (!this->sdfParsed_ || !this->rosInitialized_ || !this->ignTransportInitialized_ || !this->entitiesFound_) {
+            return; // 未准备好或实体缺失
+        }
+
+        // 如果暂停则不执行
+        if (_info.paused) {
+            return;
+        }
+
+    }
+
     // --- PostUpdate ---
     void HectorGazeboFortressPlugin::PostUpdate(const ignition::gazebo::UpdateInfo &_info,
                                                 const ignition::gazebo::EntityComponentManager &_ecm)
@@ -392,37 +411,32 @@ namespace hector_gazebo_plugins {
     void HectorGazeboFortressPlugin::ApplyControl(ignition::gazebo::EntityComponentManager &_ecm)
     {
         std::lock_guard<std::mutex> lock(cmdMutex_);
-        const double no_cmd_torque = 1.00;
+        const double no_cmd_torque = 0.00;
 
         // Check if we have a valid command
-        // if (!lastRosCmd_.has_value()) {
-        //     ignition::common::Console::err << "No ROS command received yet. Creating default command." << std::endl;
-        //
-        //     lastRosCmd_.emplace(); // 调用默认构造函数
-        //
-        //     if (lastRosCmd_.has_value()) {
-        //         for (size_t i = 0; i < jointEntities_.size(); ++i) {
-        //             lastRosCmd_->motor_command[i].q = 1.0;    // 默认目标位置
-        //             lastRosCmd_->motor_command[i].dq = 0.0;   // 默认目标速度
-        //             lastRosCmd_->motor_command[i].kp = 1.0;   // 默认 Kp (可能需要一个小的阻尼?)
-        //             lastRosCmd_->motor_command[i].kd = 1.0;   // 默认 Kd (提供一些阻尼)
-        //             lastRosCmd_->motor_command[i].tau = 0.0;   // 默认前馈力矩
-        //         }
-        //         ignition::common::Console::err << "----------------Applied default values to newly created command.-------------------" << std::endl;
-        //     } else {
-        //         ignition::common::Console::err << "Failed to emplace a default RobotCommand!" << std::endl;
-        //         for (size_t i = 0; i < jointEntities_.size(); ++i) {
-        //             _ecm.SetComponentData<ignition::gazebo::components::JointForceCmd>(jointEntities_[i], {no_cmd_torque});
-        //         }
-        //         return;
-        //     }
-        // }
-        for (size_t i = 0; i < jointEntities_.size(); ++i) {
-            _ecm.SetComponentData<ignition::gazebo::components::JointForceCmd>(jointEntities_[i], {no_cmd_torque});
-            ignition::common::Console::err << "Applying torque " << no_cmd_torque << " to " << jointNames_[i] << std::endl; // Debug
+        if (!lastRosCmd_.has_value()) {
+            // ignition::common::Console::err << "No ROS command received yet. Creating default command." << std::endl;
 
+            lastRosCmd_.emplace(); // 调用默认构造函数
+
+            if (lastRosCmd_.has_value()) {
+                for (size_t i = 0; i < jointEntities_.size(); ++i) {
+                    lastRosCmd_->motor_command[i].q = 1.0;    // 默认目标位置
+                    lastRosCmd_->motor_command[i].dq = 0.0;   // 默认目标速度
+                    lastRosCmd_->motor_command[i].kp = 1.0;   // 默认 Kp (可能需要一个小的阻尼?)
+                    lastRosCmd_->motor_command[i].kd = 1.0;   // 默认 Kd (提供一些阻尼)
+                    lastRosCmd_->motor_command[i].tau = 0.0;   // 默认前馈力矩
+                }
+                ignition::common::Console::err << "----------------Applied default values to newly created command.-------------------" << std::endl;
+            } else {
+                ignition::common::Console::err << "Failed to emplace a default RobotCommand!" << std::endl;
+                for (size_t i = 0; i < jointEntities_.size(); ++i) {
+                    _ecm.SetComponentData<ignition::gazebo::components::JointForceCmd>(jointEntities_[i], {no_cmd_torque});
+                }
+                return;
+            }
         }
-        return;
+
         const auto& current_cmd = lastRosCmd_.value();
 
         // Verify command size matches number of joints
@@ -474,6 +488,15 @@ namespace hector_gazebo_plugins {
             double pos_error = target_pos - current_pos;
             double vel_error = target_vel - current_vel;
             double torque_cmd = (kp * pos_error) + (kd * vel_error) + tau_ff;
+
+            // 存储计算出的扭矩值
+            if (i < jointForces_.size()) {
+                jointForces_[i][0] = torque_cmd;
+            } else {
+                // 确保向量大小足够
+                jointForces_.resize(i + 1, std::vector<double>(1, 0.0));
+                jointForces_[i][0] = torque_cmd;
+            }
 
             // Apply the calculated torque using OneTimeChange for efficiency
             _ecm.SetComponentData<ignition::gazebo::components::JointForceCmd>(
@@ -585,45 +608,36 @@ namespace hector_gazebo_plugins {
                  std::fill(robotStateMsg_.imu[0].accelerometer.begin(), robotStateMsg_.imu[0].accelerometer.end(), 0.0f);
             }
         } // End IMU Mutex Scope
-
         // --- Joint States ---
         if (robotStateMsg_.motor_state.size() == jointEntities_.size()) {
-            //ignition::common::Console::err << "READ Joint States " << std::endl;
             for (size_t i = 0; i < jointEntities_.size(); ++i) {
                 ignition::gazebo::Entity jointEntity = jointEntities_[i];
                 auto posComp = _ecm.Component<ignition::gazebo::components::JointPosition>(jointEntity);
                 auto velComp = _ecm.Component<ignition::gazebo::components::JointVelocity>(jointEntity);
-
-                auto forceComp = _ecm.Component<ignition::gazebo::components::JointForce>(jointEntity);
-
-
 
                 // Position
                 if (posComp && !posComp->Data().empty()) {
                     robotStateMsg_.motor_state[i].q = static_cast<float>(posComp->Data()[0]);
                 } else {
                     robotStateMsg_.motor_state[i].q = 0.0f; // Default value
-                    //ignition::common::Console::warn << "JointPosition missing for " << jointNames_[i] << " in ReadAndPublishState." << std::endl;
                 }
                 // Velocity
                 if (velComp && !velComp->Data().empty()) {
                     robotStateMsg_.motor_state[i].dq = static_cast<float>(velComp->Data()[0]);
                 } else {
                     robotStateMsg_.motor_state[i].dq = 0.0f; // Default value
-                    // ignition::common::Console::warn << "JointVelocity missing for " << jointNames_[i] << " in ReadAndPublishState." << std::endl;
                 }
-                 // Estimated Torque (using commanded torque as placeholder)
-                if (forceComp && !forceComp->Data().empty()) {
-                    robotStateMsg_.motor_state[i].tauest = static_cast<float>(forceComp->Data()[0]);
+
+                // 使用存储的力值而不是尝试读取可能已经被清零的JointForce组件
+                if (i < jointForces_.size() && !jointForces_[i].empty()) {
+                    robotStateMsg_.motor_state[i].tauest = static_cast<float>(jointForces_[i][0]);
+                    ignition::common::Console::err << "name:" << jointNames_[i] << " force:" << static_cast<float>(jointForces_[i][0]) << std::endl;
+
                 } else {
                     robotStateMsg_.motor_state[i].tauest = 0.0f; // Default value
-                    ignition::common::Console::err << "JointForceCmd missing for " << jointNames_[i] << " when reading tauEst." << std::endl;
+                    ignition::common::Console::err << "No stored force value for joint " << jointNames_[i] << " when reading tauEst." << std::endl;
                 }
             }
-        } else if (!jointEntities_.empty()) { // Avoid logging if joints weren't found at all
-            ignition::common::Console::err << "Mismatch between robotStateMsg_.motor_state size ("
-                      << robotStateMsg_.motor_state.size() << ") and found joint entities ("
-                      << jointEntities_.size() << "). Skipping joint state population." << std::endl;
         }
 
         // --- 2. Populate ContactState Message ---
@@ -696,8 +710,6 @@ namespace hector_gazebo_plugins {
     void HectorGazeboFortressPlugin::IgnRightContactCallback(const ignition::msgs::Contacts &_msg)
     {
         // Check for contact with the specified ground collision object
-        ignition::common::Console::err << "diaole" << std::endl;
-
         bool contact_with_ground = false;
         for (int i = 0; i < _msg.contact_size(); ++i) {
             const auto& contact = _msg.contact(i);
@@ -726,4 +738,5 @@ IGNITION_ADD_PLUGIN(hector_gazebo_plugins::HectorGazeboFortressPlugin,
               ignition::gazebo::System,
               hector_gazebo_plugins::HectorGazeboFortressPlugin::ISystemConfigure,
               hector_gazebo_plugins::HectorGazeboFortressPlugin::ISystemPreUpdate,
+              hector_gazebo_plugins::HectorGazeboFortressPlugin::ISystemUpdate,
               hector_gazebo_plugins::HectorGazeboFortressPlugin::ISystemPostUpdate) // <-- Added PostUpdate Interface registration

@@ -34,6 +34,7 @@ class HectorGazeboFortressPlugin :
     public ignition::gazebo::System,
     public ignition::gazebo::ISystemConfigure,
     public ignition::gazebo::ISystemPreUpdate,
+    public ignition::gazebo::ISystemUpdate,
     public ignition::gazebo::ISystemPostUpdate
 {
 public:
@@ -48,6 +49,9 @@ public:
 
     void PreUpdate(const ignition::gazebo::UpdateInfo &_info,
                    ignition::gazebo::EntityComponentManager &_ecm) override;
+
+    void Update(const ignition::gazebo::UpdateInfo &_info,
+                ignition::gazebo::EntityComponentManager &_ecm) override;
 
     // <-- Added PostUpdate Declaration -->
     void PostUpdate(const ignition::gazebo::UpdateInfo &_info,
@@ -78,6 +82,7 @@ private:
     std::vector<std::string> jointNames_;
     std::string baseLinkName_;
     size_t numJoints_{0};
+    std::vector<std::vector<double>> jointForces_;
 
     // SDF Parameters
     std::string rosCmdTopic_;

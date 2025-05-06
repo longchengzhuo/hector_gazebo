@@ -356,13 +356,24 @@
 
     <!-- 高空锚点 -->
     <model name="anchor">
-      <static>true</static>
-      <pose>0 0 0.55 0 0 0</pose>
+      <static>false</static>
+      <pose>0 0 2.5 0 0 0</pose>
       <link name="anchor_link">
+        <inertial>
+          <mass>100.0</mass>
+          <inertia>
+            <ixx>16.67</ixx>
+            <iyy>16.67</iyy>
+            <izz>16.67</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
         <visual name="visual">
           <geometry>
             <box>
-              <size>0.1 0.1 0.1</size>
+              <size>1 1 1</size>
             </box>
           </geometry>
           <material>
@@ -371,10 +382,184 @@
             <specular>1 0 0 0.5</specular>
           </material>
         </visual>
-        <!-- collision部分已移除 -->
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>1 1 1</size>
+            </box>
+          </geometry>
+        </collision>
       </link>
 
-      <!-- 可分离关节插件 -->
+      <!-- 添加四个支撑柱子 -->
+      <!-- 西南角支撑柱 -->
+      <link name="pillar_sw">
+        <pose relative_to="anchor_link">-0.5 -0.5 -1.5 0 0 0</pose>
+        <inertial>
+          <mass>1.0</mass>
+          <inertia>
+            <ixx>0.33</ixx>
+            <iyy>0.33</iyy>
+            <izz>0.0033</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.05</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.05</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+
+      <!-- 东南角支撑柱 -->
+      <link name="pillar_se">
+        <pose relative_to="anchor_link">0.5 -0.5 -1.5 0 0 0</pose>
+        <inertial>
+          <mass>1.0</mass>
+          <inertia>
+            <ixx>0.33</ixx>
+            <iyy>0.33</iyy>
+            <izz>0.0033</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.05</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.05</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+
+      <!-- 西北角支撑柱 -->
+      <link name="pillar_nw">
+        <pose relative_to="anchor_link">-0.5 0.5 -1.5 0 0 0</pose>
+        <inertial>
+          <mass>1.0</mass>
+          <inertia>
+            <ixx>0.33</ixx>
+            <iyy>0.33</iyy>
+            <izz>0.0033</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.05</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.05</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+
+      <!-- 东北角支撑柱 -->
+      <link name="pillar_ne">
+        <pose relative_to="anchor_link">0.5 0.5 -1.5 0 0 0</pose>
+        <inertial>
+          <mass>1.0</mass>
+          <inertia>
+            <ixx>0.33</ixx>
+            <iyy>0.33</iyy>
+            <izz>0.0033</izz>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyz>0</iyz>
+          </inertia>
+        </inertial>
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.05</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.8 0.8 0.8 1</ambient>
+            <diffuse>0.8 0.8 0.8 1</diffuse>
+            <specular>0.8 0.8 0.8 1</specular>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.05</radius>
+              <length>2.0</length>
+            </cylinder>
+          </geometry>
+        </collision>
+      </link>
+
+      <joint name="joint_anchor_sw" type="fixed">
+        <parent>anchor_link</parent>
+        <child>pillar_sw</child>
+      </joint>
+
+      <joint name="joint_anchor_se" type="fixed">
+        <parent>anchor_link</parent>
+        <child>pillar_se</child>
+      </joint>
+
+      <joint name="joint_anchor_nw" type="fixed">
+        <parent>anchor_link</parent>
+        <child>pillar_nw</child>
+      </joint>
+
+      <joint name="joint_anchor_ne" type="fixed">
+        <parent>anchor_link</parent>
+        <child>pillar_ne</child>
+      </joint>
+
       <plugin filename="gz-sim-detachable-joint-system"
               name="gz::sim::systems::DetachableJoint">
         <parent_link>anchor_link</parent_link>
@@ -383,12 +568,13 @@
         <detach_topic>/model/anchor/detachable_joint/detach</detach_topic>
         <attach_topic>/model/anchor/detachable_joint/attach</attach_topic>
         <output_topic>/model/anchor/detachable_joint/state</output_topic>
+        <initial_attached>true</initial_attached>
       </plugin>
     </model>
 
 
     <model name='hector_v2'>
-      <pose relative_to='world'>0 0 0.55 0 0 0</pose>
+      <pose relative_to='world'>0 0 1.05 0 0 0</pose>
       <link name='base_link'>
         <inertial>
           <pose>2.630194634402946e-06 2.20585656671927e-05 4.29598456952481e-05 0 0 0</pose>
