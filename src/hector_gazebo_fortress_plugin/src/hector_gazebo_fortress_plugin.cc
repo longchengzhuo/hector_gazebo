@@ -278,7 +278,7 @@ namespace hector_gazebo_plugins {
             ignition::common::Console::err << "Foot link named '" << this->lFootLInkName_ << "' not found within model." << std::endl;
             return false;
         }
-        ignition::common::Console::err << "Found Foot link '" << this->lFootLInkName_ << "' with entity ID: " << this->lFootLInkEntity_ << std::endl;
+        ignition::common::Console::warn << "Found Foot link '" << this->lFootLInkName_ << "' with entity ID: " << this->lFootLInkEntity_ << std::endl;
 
 
         if (!_ecm.HasEntity(this->lFootLInkEntity_))
@@ -292,7 +292,7 @@ namespace hector_gazebo_plugins {
             ignition::common::Console::err << "Foot link named '" << this->rFootLInkName_ << "' not found within model." << std::endl;
             return false;
         }
-        ignition::common::Console::err << "Found Foot link '" << this->rFootLInkName_ << "' with entity ID: " << this->rFootLInkEntity_ << std::endl;
+        ignition::common::Console::warn << "Found Foot link '" << this->rFootLInkName_ << "' with entity ID: " << this->rFootLInkEntity_ << std::endl;
 
 
         if (!_ecm.HasEntity(this->rFootLInkEntity_))
@@ -315,11 +315,11 @@ namespace hector_gazebo_plugins {
              _ecm.CreateComponent(this->baseLinkEntity_, ignition::gazebo::components::WorldAngularVelocity());
         }
         if (!_ecm.Component<ignition::gazebo::components::WorldPose>(this->rFootLInkEntity_)) {
-            ignition::common::Console::err << "Creating WorldPose component for foot link '" << this->rFootLInkName_ << "' (might indicate physics system issue if missing)." << std::endl;
+            ignition::common::Console::warn << "Creating WorldPose component for foot link '" << this->rFootLInkName_ << "' (might indicate physics system issue if missing)." << std::endl;
             _ecm.CreateComponent(this->rFootLInkEntity_, ignition::gazebo::components::WorldPose());
         }
         if (!_ecm.Component<ignition::gazebo::components::WorldPose>(this->lFootLInkEntity_)) {
-            ignition::common::Console::err << "Creating WorldPose component for foot link '" << this->lFootLInkName_ << "' (might indicate physics system issue if missing)." << std::endl;
+            ignition::common::Console::warn << "Creating WorldPose component for foot link '" << this->lFootLInkName_ << "' (might indicate physics system issue if missing)." << std::endl;
             _ecm.CreateComponent(this->lFootLInkEntity_, ignition::gazebo::components::WorldPose());
         }
 
@@ -464,11 +464,11 @@ namespace hector_gazebo_plugins {
 
             if (lastRosCmd_.has_value()) {
                 for (size_t i = 0; i < jointEntities_.size(); ++i) {
-                    lastRosCmd_->motor_command[i].q = 0.0;    // 默认目标位置
-                    lastRosCmd_->motor_command[i].dq = 0.0;   // 默认目标速度
-                    lastRosCmd_->motor_command[i].kp = 0.0;   // 默认 Kp (可能需要一个小的阻尼?)
-                    lastRosCmd_->motor_command[i].kd = 0.1;   // 默认 Kd (提供一些阻尼)
-                    lastRosCmd_->motor_command[i].tau = 0.0;   // 默认前馈力矩
+                    lastRosCmd_->motor_command[i].q = 0.0;
+                    lastRosCmd_->motor_command[i].dq = 0.0;
+                    lastRosCmd_->motor_command[i].kp = 0.0;
+                    lastRosCmd_->motor_command[i].kd = 0.0;
+                    lastRosCmd_->motor_command[i].tau = 0.0;
                 }
                 ignition::common::Console::err << "----------------Applied default values to newly created command.-------------------" << std::endl;
             } else {
@@ -651,10 +651,10 @@ namespace hector_gazebo_plugins {
             if (imuReceived_ && robotStateMsg_.imu.size() > 0) {
                 // Orientation (Quaternion)
                 if (lastIgnImuMsg_.has_orientation()) {
-                     robotStateMsg_.imu[0].quaternion[0] = static_cast<float>(lastIgnImuMsg_.orientation().x());
-                     robotStateMsg_.imu[0].quaternion[1] = static_cast<float>(lastIgnImuMsg_.orientation().y());
-                     robotStateMsg_.imu[0].quaternion[2] = static_cast<float>(lastIgnImuMsg_.orientation().z());
-                     robotStateMsg_.imu[0].quaternion[3] = static_cast<float>(lastIgnImuMsg_.orientation().w());
+                     robotStateMsg_.imu[0].quaternion[1] = static_cast<float>(lastIgnImuMsg_.orientation().x());
+                     robotStateMsg_.imu[0].quaternion[2] = static_cast<float>(lastIgnImuMsg_.orientation().y());
+                     robotStateMsg_.imu[0].quaternion[3] = static_cast<float>(lastIgnImuMsg_.orientation().z());
+                     robotStateMsg_.imu[0].quaternion[0] = static_cast<float>(lastIgnImuMsg_.orientation().w());
                 }
                 // Gyroscope
                 if (lastIgnImuMsg_.has_angular_velocity()) {

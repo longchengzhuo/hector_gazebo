@@ -357,7 +357,7 @@
     <!-- 高空锚点 -->
     <model name="anchor">
       <static>false</static>
-      <pose>5 5 2.5 0 0 0</pose>
+      <pose>0 0 2.5 0 0 0</pose>
       <link name="anchor_link">
         <inertial>
           <mass>100.0</mass>
@@ -574,7 +574,7 @@
 
 
     <model name='hector_v2'>
-      <pose relative_to='world'>5 5 0.65 0 0 0</pose>
+      <pose relative_to='world'>0 0 0.55 0 0 0</pose>
       <link name='base_link'>
         <inertial>
           <pose>2.630194634402946e-06 2.20585656671927e-05 4.29598456952481e-05 0 0 0</pose>
@@ -910,7 +910,7 @@
         </visual>
       </link>
       <joint name='L_hip_pitch_joint' type='revolute'>
-        <pose relative_to='L_hip_roll_link'>-0.06 0.018 0 0 0.7853981633974484 0</pose>
+        <pose relative_to='L_hip_roll_link'>-0.06 0.018 0 0 0 0</pose>
         <parent>L_hip_roll_link</parent>
         <child>L_hip_pitch_link</child>
         <axis>
@@ -972,7 +972,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/hip_pitch_combined_L2.stl</uri>
+              <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/l_thigh.stl</uri>
             </mesh>
           </geometry>
           <material>
@@ -982,7 +982,7 @@
         </visual>
       </link>
       <joint name='L_knee_joint' type='revolute'>
-        <pose relative_to='L_hip_pitch_link'>0 0 -0.22 0 -1.570796326794897 0</pose>
+        <pose relative_to='L_hip_pitch_link'>0 0 -0.22 0 0 0</pose>
         <parent>L_hip_pitch_link</parent>
         <child>L_knee_link</child>
         <axis>
@@ -1027,7 +1027,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/knee_combined_L.stl</uri>
+              <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/calf.stl</uri>
             </mesh>
           </geometry>
           <material>
@@ -1037,7 +1037,7 @@
         </visual>
       </link>
       <joint name='L_ankle_joint' type='revolute'>
-        <pose relative_to='L_knee_link'>0 0 -0.22 0 0.7853981633974484 0</pose>
+        <pose relative_to='L_knee_link'>0 0 -0.22 0 0 0</pose>
         <parent>L_knee_link</parent>
         <child>L_ankle_link</child>
         <axis>
@@ -1478,7 +1478,7 @@
         </visual>
       </link>
       <joint name='R_hip_pitch_joint' type='revolute'>
-        <pose relative_to='R_hip_roll_link'>-0.06 -0.018 0 0 0.7853981633974484 0</pose>
+        <pose relative_to='R_hip_roll_link'>-0.06 -0.018 0 0 0 0</pose>
         <parent>R_hip_roll_link</parent>
         <child>R_hip_pitch_link</child>
         <axis>
@@ -1540,7 +1540,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/hip_pitch_combined_R2.stl</uri>
+              <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/r_thigh.stl</uri>
             </mesh>
           </geometry>
           <material>
@@ -1550,7 +1550,7 @@
         </visual>
       </link>
       <joint name='R_knee_joint' type='revolute'>
-        <pose relative_to='R_hip_pitch_link'>0 0 -0.22 0 -1.570796326794897 0</pose>
+        <pose relative_to='R_hip_pitch_link'>0 0 -0.22 0 0 0</pose>
         <parent>R_hip_pitch_link</parent>
         <child>R_knee_link</child>
         <axis>
@@ -1595,7 +1595,7 @@
           <geometry>
             <mesh>
               <scale>1 1 1</scale>
-              <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/knee_combined_R.stl</uri>
+              <uri>file:///home/cl/CLionProjects/hector_gazebo/install/hector_gazebo/share/hector_gazebo/assets/models/meshes/calf.stl</uri>
             </mesh>
           </geometry>
           <material>
@@ -1605,7 +1605,7 @@
         </visual>
       </link>
       <joint name='R_ankle_joint' type='revolute'>
-        <pose relative_to='R_knee_link'>0 0 -0.22 0 0.7853981633974484 0</pose>
+        <pose relative_to='R_knee_link'>0 0 -0.22 0 0 0</pose>
         <parent>R_knee_link</parent>
         <child>R_ankle_link</child>
         <axis>
