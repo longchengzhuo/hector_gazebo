@@ -39,6 +39,20 @@ namespace hector_gazebo_plugins {
 
     HectorGazeboFortressPlugin::~HectorGazeboFortressPlugin()
     {
+        // 停止ROS spin线程
+        shouldSpin_ = false;
+        if (spinThread_.joinable())
+        {
+            spinThread_.join();
+        }
+
+        // 清理executor
+        if (executor_)
+        {
+            executor_->cancel();
+            executor_.reset();
+        }
+
         rosNode_.reset();
     }
 
@@ -76,6 +90,21 @@ namespace hector_gazebo_plugins {
             return;
         }
         ignition::common::Console::warn << "ROS components initialized for " << modelNameStr << "." << std::endl;
+
+        // 创建单线程执行器
+        executor_ = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
+        executor_->add_node(rosNode_);
+
+        // 在独立线程中运行executor
+        shouldSpin_ = true;
+        spinThread_ = std::thread([this]() {
+            ignition::common::Console::err << "在独立线程中运行executor " << std::endl;
+
+            while (shouldSpin_ && rclcpp::ok())
+            {
+                executor_->spin_once(std::chrono::milliseconds(1));
+            }
+        });
 
         // --- 3. Initialize Ignition Transport ---
         InitIgnitionTransport();
@@ -171,6 +200,8 @@ namespace hector_gazebo_plugins {
 
         try {
             rosNode_ = std::make_shared<rclcpp::Node>(node_name);
+            rosNode_->declare_parameter("publish_rate", 1000.0);
+            ignition::common::Console::err << "publish_rate, 1000.0" << std::endl;
         } catch (const std::exception &e) {
             ignition::common::Console::err << "Failed to create ROS 2 node '" << node_name << "': " << e.what() << std::endl;
             return;
@@ -384,6 +415,28 @@ namespace hector_gazebo_plugins {
     void HectorGazeboFortressPlugin::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
                                                ignition::gazebo::EntityComponentManager &_ecm)
     {
+        // 在方法开始处添加
+        static std::chrono::time_point<std::chrono::system_clock> last_real_time = std::chrono::system_clock::now();
+        static auto last_sim_time = _info.simTime;
+
+        auto current_real_time = std::chrono::system_clock::now();
+        auto real_dt = std::chrono::duration_cast<std::chrono::microseconds>(
+            current_real_time - last_real_time).count() / 1000000.0; // 转为秒
+
+        auto sim_dt = (_info.simTime - last_sim_time).count() / 1000000000.0; // 转为秒
+
+        // 每100次或者每秒打印一次
+        static int counter = 0;
+        counter++;
+        if (counter % 100 == 0) {
+            ignition::common::Console::err << "真实时间控制频率: " << 1.0/real_dt
+                                          << " Hz, 仿真时间步长: " << sim_dt
+                                          << " 秒, RTF: " << sim_dt/real_dt << std::endl;
+        }
+
+        last_real_time = current_real_time;
+        last_sim_time = _info.simTime;
+
         // Check initialization status
         if (!this->sdfParsed_ || !this->rosInitialized_ || !this->ignTransportInitialized_) {
             return; // Not configured yet
@@ -397,16 +450,6 @@ namespace hector_gazebo_plugins {
             }
         }
 
-        // Spin ROS node to process incoming messages (like commands)
-        if (this->rosNode_) {
-            // Use non-blocking spin_some
-            rclcpp::spin_some(this->rosNode_);
-        } else {
-             if (this->rosInitialized_) { // Only log error if it was initialized before
-                ignition::common::Console::err << "ROS Node pointer invalid during PreUpdate." << std::endl;
-             }
-            return; // Cannot process commands or publish state
-        }
 
         // Do nothing if paused
         if (_info.paused) {
@@ -554,6 +597,28 @@ namespace hector_gazebo_plugins {
     // --- ReadAndPublishState (takes const ECM) ---
     void HectorGazeboFortressPlugin::ReadAndPublishState(const ignition::gazebo::UpdateInfo &_info, const ignition::gazebo::EntityComponentManager &_ecm)
     {
+        // if (!first_publish_) {
+        //     auto sim_period = _info.simTime - last_sim_time_;
+        //     double sim_period_sec = std::chrono::duration<double>(sim_period).count();
+        //
+        //     // 更新平均周期（基于仿真时间）
+        //     average_sim_publish_period_ = (average_sim_publish_period_ * publish_count_ + sim_period_sec) / (publish_count_ + 1);
+        //     publish_count_++;
+        //
+        //     // 每1000次发布输出一次统计信息
+        //     if (publish_count_ % 1000 == 0) {
+        //         double sim_hz = 1.0 / average_sim_publish_period_;
+        //         ignition::common::Console::err << "Simulated publish rate: " << sim_hz << " Hz" << std::endl;
+        //
+        //         // 额外显示实时因子信息
+        //         double rtf = sim_period_sec / (_info.dt.count() * 1e-9);  // 实时因子
+        //         ignition::common::Console::err << "Real-time factor: " << rtf << "x" << std::endl;
+        //     }
+        // } else {
+        //     first_publish_ = false;
+        // }
+        //
+        // last_sim_time_ = _info.simTime;
         // --- 1. Populate RobotState Message ---
         // Use _ecm.Component() which is const-correct for reading
         if (this->baseLinkEntity_ != ignition::gazebo::kNullEntity) {
@@ -735,7 +800,7 @@ namespace hector_gazebo_plugins {
     {
         std::lock_guard<std::mutex> lock(cmdMutex_);
         lastRosCmd_ = *_msg;
-        ignition::common::Console::err << "Received new ROS command." << std::endl; // Use log or debug level
+        //ignition::common::Console::err << "Received new ROS command." << std::endl; // Use log or debug level
     }
 
     void HectorGazeboFortressPlugin::IgnImuCallback(const ignition::msgs::IMU &_msg)

@@ -99,6 +99,10 @@ private:
     std::string groundCollisionName_;
 
     // ROS 2
+    std::shared_ptr<rclcpp::executors::SingleThreadedExecutor> executor_;
+    std::thread spinThread_;
+    std::atomic<bool> shouldSpin_{false};
+
     rclcpp::Node::SharedPtr rosNode_;
     rclcpp::Subscription<laser_interfaces::msg::RobotCommand>::SharedPtr rosCmdSub_;
     rclcpp::Publisher<laser_interfaces::msg::RobotState>::SharedPtr rosRobotStatePub_;
@@ -126,6 +130,12 @@ private:
     bool entitiesFound_{false};
     bool ignTransportInitialized_{false};
     bool sdfParsed_{false};
+
+    // 基于仿真时间的性能计时器
+    std::chrono::steady_clock::duration last_sim_time_;
+    double average_sim_publish_period_ = 0.0;
+    size_t publish_count_ = 0;
+    bool first_publish_ = true;
 };
 
 }
