@@ -1918,7 +1918,7 @@
           </material>
         </visual>
       </link>
-      <plugin name='hector_gazebo_plugins::HectorGazeboFortressPlugin' filename='/home/cl/CLionProjects/hector_gazebo/install/hector_gazebo_fortress_plugin/lib/libhector_gazebo_fortress_plugin.so'>
+      <plugin name='hector_gazebo_plugins::HectorGazeboFortressPlugin' filename='/your/own/libhector_gazebo_fortress_plugin.so'>
         <joint_name>L_hip_yaw_joint</joint_name>
         <joint_name>L_hip_roll_joint</joint_name>
         <joint_name>L_hip_pitch_joint</joint_name>
