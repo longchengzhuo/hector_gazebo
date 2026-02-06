@@ -20,11 +20,19 @@ sudo apt install ros-humble-ros-ign
 ```bash
 git clone https://github.com/hector-project/hector_gazebo.git
 cd hector_gazebo
-# Important: Do not rename CMakeLists.bak to CMakeLists.txt.
+# Important: Do not rename CMakeLists.txt to CMakeLists.txt.
 # This .bak file is for debugging; renaming it will cause build failure.
-# You can safely delete CMakeLists.bak if preferred.
-colcon build
+# You can safely delete CMakeLists.txt if preferred.
+colcon build --packages-skip hector_mujoco
+
+### Building `hector_mujoco` (Optional)
+### If you intend to use the MuJoCo-based simulation, you need to build the `hector_mujoco` package separately with specific arguments:
+
+colcon build --packages-select hector_mujoco --symlink-install --cmake-args -DCMAKE_BUILD_TYPE=Release
 ```
+This ensures that `hector_mujoco` is built with the necessary release optimizations and symlinked installation for development.
+
+
 
 ### 3. Configure Gazebo Plugin Path
 After a successful build, update the world file with the correct path to the `hector_gazebo_fortress_plugin`.
