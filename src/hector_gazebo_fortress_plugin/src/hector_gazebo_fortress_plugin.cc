@@ -39,14 +39,14 @@ namespace hector_gazebo_plugins {
 
     HectorGazeboFortressPlugin::~HectorGazeboFortressPlugin()
     {
-        // 停止ROS spin线程
+        // Stop ROS spin thread
         shouldSpin_ = false;
         if (spinThread_.joinable())
         {
             spinThread_.join();
         }
 
-        // 清理executor
+        // Clean up executor
         if (executor_)
         {
             executor_->cancel();
@@ -91,14 +91,14 @@ namespace hector_gazebo_plugins {
         }
         ignition::common::Console::warn << "ROS components initialized for " << modelNameStr << "." << std::endl;
 
-        // 创建单线程执行器
+        // Create single-threaded executor
         executor_ = std::make_shared<rclcpp::executors::SingleThreadedExecutor>();
         executor_->add_node(rosNode_);
 
-        // 在独立线程中运行executor
+        // Run executor in a separate thread
         shouldSpin_ = true;
         spinThread_ = std::thread([this]() {
-            ignition::common::Console::err << "在独立线程中运行executor " << std::endl;
+            ignition::common::Console::err << "Running executor in a separate thread" << std::endl;
 
             while (shouldSpin_ && rclcpp::ok())
             {
@@ -404,7 +404,7 @@ namespace hector_gazebo_plugins {
 
         this->jointForces_.resize(this->jointEntities_.size());
         for (auto &force : this->jointForces_) {
-            force.resize(1, 0.0);  // 默认每个关节只有一个力分量
+            force.resize(1, 0.0);  // Default each joint has only one force component
         }
         this->entitiesFound_ = true;
         ignition::common::Console::warn << "All required entities (base link and " << this->jointEntities_.size() << " joints) found." << std::endl;
@@ -415,23 +415,23 @@ namespace hector_gazebo_plugins {
     void HectorGazeboFortressPlugin::PreUpdate(const ignition::gazebo::UpdateInfo &_info,
                                                ignition::gazebo::EntityComponentManager &_ecm)
     {
-        // 在方法开始处添加
+        // Add at the beginning of the method
         static std::chrono::time_point<std::chrono::system_clock> last_real_time = std::chrono::system_clock::now();
         static auto last_sim_time = _info.simTime;
 
         auto current_real_time = std::chrono::system_clock::now();
         auto real_dt = std::chrono::duration_cast<std::chrono::microseconds>(
-            current_real_time - last_real_time).count() / 1000000.0; // 转为秒
+            current_real_time - last_real_time).count() / 1000000.0; // convert to seconds
 
-        auto sim_dt = (_info.simTime - last_sim_time).count() / 1000000000.0; // 转为秒
+        auto sim_dt = (_info.simTime - last_sim_time).count() / 1000000000.0; // convert to seconds
 
-        // 每100次或者每秒打印一次
+        // Print every 100 iterations or every second
         static int counter = 0;
         counter++;
         if (counter % 100 == 0) {
-            ignition::common::Console::err << "真实时间控制频率: " << 1.0/real_dt
-                                          << " Hz, 仿真时间步长: " << sim_dt
-                                          << " 秒, RTF: " << sim_dt/real_dt << std::endl;
+            ignition::common::Console::err << "Real-time control frequency: " << 1.0/real_dt
+                                          << " Hz, Simulation time step: " << sim_dt
+                                          << " s, RTF: " << sim_dt/real_dt << std::endl;
         }
 
         last_real_time = current_real_time;
@@ -464,12 +464,12 @@ namespace hector_gazebo_plugins {
     void HectorGazeboFortressPlugin::Update(const ignition::gazebo::UpdateInfo &_info,
                                            ignition::gazebo::EntityComponentManager &_ecm)
     {
-        // 检查初始化状态
+        // Check initialization status
         if (!this->sdfParsed_ || !this->rosInitialized_ || !this->ignTransportInitialized_ || !this->entitiesFound_) {
-            return; // 未准备好或实体缺失
+            return; // Not ready or entities missing
         }
 
-        // 如果暂停则不执行
+        // Do nothing if paused
         if (_info.paused) {
             return;
         }
@@ -503,7 +503,7 @@ namespace hector_gazebo_plugins {
         if (!lastRosCmd_.has_value()) {
             ignition::common::Console::err << "No ROS command received yet. Creating default command." << std::endl;
 
-            lastRosCmd_.emplace(); // 调用默认构造函数
+            lastRosCmd_.emplace(); // Call default constructor
 
             if (lastRosCmd_.has_value()) {
                 for (size_t i = 0; i < jointEntities_.size(); ++i) {
@@ -575,11 +575,11 @@ namespace hector_gazebo_plugins {
             double vel_error = target_vel - current_vel;
             double torque_cmd = (kp * pos_error) + (kd * vel_error) + tau_ff;
 
-            // 存储计算出的扭矩值
+            // Store the calculated torque value
             if (i < jointForces_.size()) {
                 jointForces_[i][0] = torque_cmd;
             } else {
-                // 确保向量大小足够
+                // Ensure the vector size is sufficient
                 jointForces_.resize(i + 1, std::vector<double>(1, 0.0));
                 jointForces_[i][0] = torque_cmd;
             }
@@ -601,17 +601,17 @@ namespace hector_gazebo_plugins {
         //     auto sim_period = _info.simTime - last_sim_time_;
         //     double sim_period_sec = std::chrono::duration<double>(sim_period).count();
         //
-        //     // 更新平均周期（基于仿真时间）
+        //     // Update average period (based on simulation time)
         //     average_sim_publish_period_ = (average_sim_publish_period_ * publish_count_ + sim_period_sec) / (publish_count_ + 1);
         //     publish_count_++;
         //
-        //     // 每1000次发布输出一次统计信息
+        //     // Output statistics every 1000 publications
         //     if (publish_count_ % 1000 == 0) {
         //         double sim_hz = 1.0 / average_sim_publish_period_;
         //         ignition::common::Console::err << "Simulated publish rate: " << sim_hz << " Hz" << std::endl;
         //
-        //         // 额外显示实时因子信息
-        //         double rtf = sim_period_sec / (_info.dt.count() * 1e-9);  // 实时因子
+        //         // Extra display of real-time factor information
+        //         double rtf = sim_period_sec / (_info.dt.count() * 1e-9);  // Real-time factor
         //         ignition::common::Console::err << "Real-time factor: " << rtf << "x" << std::endl;
         //     }
         // } else {

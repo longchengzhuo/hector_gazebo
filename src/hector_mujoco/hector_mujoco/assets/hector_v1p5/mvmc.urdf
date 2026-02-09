@@ -1,0 +1,326 @@
+<?xml version="0.0" ?>
+<robot name="hector_v1p5">
+	<link name="torso">
+		<inertial>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<mass value="4.87000"/>
+			<inertia ixx="0.0456542" ixy="0" ixz="0" iyy="0.0377999" iyz="0" izz="0.0158533"/>
+		</inertial>
+		<collision>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/base.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+		</collision>
+		<visual>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/base.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+		</visual>
+		<material name="black">
+			<color rgba="0.25 0.25 0.25 1"/> 
+		</material>
+	</link>
+	<link name="l_hip1">
+		<inertial>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.05147 0.01453 -0.06160"/>
+			<mass value="0.77833"/>
+			<inertia ixx="0.00122" ixy="0" ixz="0" iyy="0.00111" iyz="0" izz="0.00081"/>
+		</inertial>
+		<collision>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/l_hip1.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+		</collision>
+		<visual>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/l_hip1.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+			<material name="silver">
+				<color rgba="0.75 0.75 0.75 1"/>
+			</material>
+		</visual>
+	</link>
+	<link name="l_hip2">
+		<inertial>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="-0.05690 -0.00009 0.00023"/>
+			<mass value="0.67724"/>
+			<inertia ixx="0.00053" ixy="0" ixz="0" iyy="0.00087" iyz="0" izz="0.00061"/>
+		</inertial>
+		<collision>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/l_hip2.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+		</collision>
+		<visual>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/l_hip2.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+			<material name="silver">
+				<color rgba="0.75 0.75 0.75 1"/>
+			</material>
+		</visual>
+	</link>
+	<link name="l_thigh">
+		<inertial>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="-0.00040 0.04438 -0.05736"/>
+			<mass value="1.73719"/>
+			<inertia ixx="0.00765" ixy="0" ixz="0" iyy="0.00790" iyz="0" izz="0.00175"/>
+		</inertial>
+		<collision>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/l_thigh.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+		</collision>
+		<visual>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/l_thigh.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+			<material name="silver">
+				<color rgba="0.75 0.75 0.75 1"/>
+			</material>
+		</visual>
+	</link>
+	<link name="l_calf">
+		<inertial>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00204 0.00000 -0.07668"/>
+			<mass value="0.14647"/>
+			<inertia ixx="0.00074" ixy="0" ixz="0" iyy="0.00075" iyz="0" izz="0.00002"/>
+		</inertial>
+		<collision>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.01743 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/l_calf.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+		</collision>
+		<visual>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.01743 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/l_calf.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+			<material name="silver">
+				<color rgba="0.75 0.75 0.75 1"/>
+			</material>
+		</visual>
+	</link>
+	<link name="l_toe">
+		<inertial>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00246 0.00003 -0.02248"/>
+			<mass value="0.08440"/>
+			<inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00011" iyz="0" izz="0.00010"/>
+		</inertial>
+		<collision>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00003 -0.01195 -0.04546"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/l_toe.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+		</collision>
+		<visual>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00003 -0.01195 -0.04546"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/l_toe.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+			<material name="silver">
+				<color rgba="0.75 0.75 0.75 1"/>
+			</material>
+		</visual>
+	</link>
+	<link name="r_hip1">
+		<inertial>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.05147 -0.01453 -0.06160"/>
+			<mass value="0.77833"/>
+			<inertia ixx="0.00122" ixy="0" ixz="0" iyy="0.00111" iyz="0" izz="0.00081"/>
+		</inertial>
+		<collision>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/r_hip1.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+		</collision>
+		<visual>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/r_hip1.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+			<material name="silver">
+				<color rgba="0.75 0.75 0.75 1"/>
+			</material>
+		</visual>
+	</link>
+	<link name="r_hip2">
+		<inertial>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="-0.05690 0.00009 0.00023"/>
+			<mass value="0.67724"/>
+			<inertia ixx="0.00053" ixy="0" ixz="0" iyy="0.00087" iyz="0" izz="0.00061"/>
+		</inertial>
+		<collision>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/r_hip2.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+		</collision>
+		<visual>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/r_hip2.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+			<material name="silver">
+				<color rgba="0.75 0.75 0.75 1"/>
+			</material>
+		</visual>
+	</link>
+	<link name="r_thigh">
+		<inertial>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="-0.00040 -0.04438 -0.05736"/>
+			<mass value="1.73719"/>
+			<inertia ixx="0.00765" ixy="0" ixz="0" iyy="0.00790" iyz="0" izz="0.00175"/>
+		</inertial>
+		<collision>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/r_thigh.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+		</collision>
+		<visual>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/r_thigh.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+			<material name="silver">
+				<color rgba="0.75 0.75 0.75 1"/>
+			</material>
+		</visual>
+	</link>
+	<link name="r_calf">
+		<inertial>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00204 0.00000 -0.07668"/>
+			<mass value="0.14647"/>
+			<inertia ixx="0.00074" ixy="0" ixz="0" iyy="0.00075" iyz="0" izz="0.00002"/>
+		</inertial>
+		<collision>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.01743 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/r_calf.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+		</collision>
+		<visual>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.01743 0.00000"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/r_calf.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+			<material name="silver">
+				<color rgba="0.75 0.75 0.75 1"/>
+			</material>
+		</visual>
+	</link>
+	<link name="r_toe">
+		<inertial>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00246 -0.00003 -0.02248"/>
+			<mass value="0.08440"/>
+			<inertia ixx="0.00001" ixy="0" ixz="0" iyy="0.00011" iyz="0" izz="0.00010"/>
+		</inertial>
+		<collision>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00003 -0.01195 -0.04546"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/r_toe.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+		</collision>
+		<visual>
+			<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00003 -0.01195 -0.04546"/>
+			<geometry>
+				<mesh filename="package://hector_mujoco/assets/hector_v1p5/meshes/r_toe.obj" scale="1.00000 1.00000 1.00000"/>
+			</geometry>
+			<material name="silver">
+				<color rgba="0.75 0.75 0.75 1"/>
+			</material>
+		</visual>
+	</link>
+	<joint name="l_hip_yaw" type="revolute">
+		<parent link="torso"/>
+		<child link="l_hip1"/>
+		<limit effort="33.5" lower="-0.78540" upper="0.78540" velocity="21.0"/>
+		<dynamics damping="1.0" friction="0.0001"/>
+		<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.04700 -0.12650"/>
+		<axis xyz="0.00000 0.00000 1.00000"/>
+	</joint>
+
+	<joint name="l_hip_roll" type="revolute">
+		<parent link="l_hip1"/>
+		<child link="l_hip2"/>
+		<limit effort="33.5" lower="-0.78540" upper="0.78540" velocity="21.0"/>
+		<dynamics damping="1.0" friction="0.0001"/>
+		<origin rpy="0.00000 -0.00000 0.00000" xyz="0.04650 0.01500 -0.07050"/>
+		<axis xyz="1.00000 0.00000 0.00000"/>
+	</joint>
+	<joint name="l_hip_pitch" type="revolute">
+		<parent link="l_hip2"/>
+		<child link="l_thigh"/>
+		<limit effort="33.5" lower="-1.04720" upper="1.13446" velocity="21.0"/>
+		<dynamics damping="1.0" friction="0.0001"/>
+		<origin rpy="0.00000 -0.00000 0.00000" xyz="-0.06000 0.01800 0.00000"/>
+		<axis xyz="0.00000 1.00000 0.00000"/>
+	</joint>
+	<joint name="l_knee" type="revolute">
+		<parent link="l_thigh"/>
+		<child link="l_calf"/>
+		<limit effort="67.0" lower="-0.87266" upper="1.74533" velocity="10.5"/>
+		<dynamics damping="1.0" friction="0.0001"/>
+		<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.01800 -0.22000"/>
+		<axis xyz="0.00000 1.00000 0.00000"/>
+	</joint>
+	<joint name="l_ankle" type="revolute">
+		<parent link="l_calf"/>
+		<child link="l_toe"/>
+		<limit effort="33.5" lower="-1.57080" upper="0.78540" velocity="21.0"/>
+		<dynamics damping="1.0" friction="0.0001"/>
+		<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 -0.22000"/>
+		<axis xyz="0.00000 1.00000 0.00000"/>
+	</joint>
+	<joint name="r_hip_yaw" type="revolute">
+		<parent link="torso"/>
+		<child link="r_hip1"/>
+		<limit effort="33.5" lower="-0.78540" upper="0.78540" velocity="21.0"/>
+		<dynamics damping="1.0" friction="0.0001"/>
+		<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 -0.04700 -0.12650"/>
+		<axis xyz="0.00000 0.00000 1.00000"/>
+	</joint>
+	<joint name="r_hip_roll" type="revolute">
+		<parent link="r_hip1"/>
+		<child link="r_hip2"/>
+		<limit effort="33.5" lower="-0.78540" upper="0.78540" velocity="21.0"/>
+		<dynamics damping="1.0" friction="0.0001"/>
+		<origin rpy="0.00000 -0.00000 0.00000" xyz="0.04650 -0.01500 -0.07050"/>
+		<axis xyz="1.00000 0.00000 0.00000"/>
+	</joint>
+	<joint name="r_hip_pitch" type="revolute">
+		<parent link="r_hip2"/>
+		<child link="r_thigh"/>
+		<limit effort="33.5" lower="-1.04720" upper="1.13446" velocity="21.0"/>
+		<dynamics damping="1.0" friction="0.0001"/>
+		<origin rpy="0.00000 -0.00000 0.00000" xyz="-0.06000 -0.01800 0.00000"/>
+		<axis xyz="0.00000 1.00000 0.00000"/>
+	</joint>
+	<joint name="r_knee" type="revolute">
+		<parent link="r_thigh"/>
+		<child link="r_calf"/>
+		<limit effort="67" lower="-0.87266" upper="1.74533" velocity="10.5"/>
+		<dynamics damping="1.0" friction="0.0001"/>
+		<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 -0.01800 -0.22000"/>
+		<axis xyz="0.00000 1.00000 0.00000"/>
+	</joint>
+	<joint name="r_ankle" type="revolute">
+		<parent link="r_calf"/>
+		<child link="r_toe"/>
+		<limit effort="33.5" lower="-1.57080" upper="0.78540" velocity="21.0"/>
+		<dynamics damping="1.0" friction="0.0001"/>
+		<origin rpy="0.00000 -0.00000 0.00000" xyz="0.00000 0.00000 -0.22000"/>
+		<axis xyz="0.00000 1.00000 0.00000"/>
+	</joint>
+</robot>

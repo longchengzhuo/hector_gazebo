@@ -1,6 +1,26 @@
-# Hector Gazebo Simulation with ROS 2 Humble and Ignition Fortress on Ubuntu 22.04
+# Hector Gazebo/Mujoco Simulation 
+<div align="center">
+  <img src="assets/gazebo1.gif" width="48%" />
+  <img src="assets/gazebo2.gif" width="48%" />
+  <img src="assets/mujoco1.gif" width="48%" />
+  <img src="assets/mujoco2.gif" width="48%" />
+</div>
 
 This guide outlines configuring and running the Hector Gazebo simulation with ROS 2 Humble Hawksbill and Ignition Fortress on Ubuntu 22.04.
+
+## Quick Start
+You can quickly launch the simulation using the provided script files:
+```bash
+./run_gazebo.sh
+# or
+./run_mujoco.sh
+```
+In the `keyboard_joy` terminal window, use the following keys for control:
+* **1**: Prepare
+* **2**: Set legs to contact ground
+* **3**: Walk in place
+* **4**: Stop
+* **W/A/S/D**: Directional control (Forward/Left/Backward/Right)
 
 ## Prerequisites
 * Ubuntu 22.04 LTS
@@ -20,9 +40,9 @@ sudo apt install ros-humble-ros-ign
 ```bash
 git clone https://github.com/hector-project/hector_gazebo.git
 cd hector_gazebo
-# Important: Do not rename CMakeLists.txt to CMakeLists.txt.
+# Important: Do not rename CMakeLists.bak to CMakeLists.txt.
 # This .bak file is for debugging; renaming it will cause build failure.
-# You can safely delete CMakeLists.txt if preferred.
+# You can safely delete CMakeLists.bak if preferred.
 colcon build --packages-skip hector_mujoco
 
 ### Building `hector_mujoco` (Optional)
@@ -47,7 +67,7 @@ After a successful build, update the world file with the correct path to the `he
     For example, if your workspace is `/home/user/hector_gazebo`, the path would be `/home/user/hector_gazebo/install/hector_gazebo_fortress_plugin/lib/libhector_gazebo_fortress_plugin.so`.
 
 ## Running the Simulation
-Follow these steps to launch and control the simulated robot.
+Follow these steps to launch and control the simulated robot manually.
 
 ### Step 0: Source Workspace Setup
 **Important**: In every new terminal for this simulation, navigate to your `hector_gazebo` workspace directory (the `hector_gazebo` folder you cloned) and source the local setup file:
@@ -80,7 +100,3 @@ To control the robot via keyboard, open a new terminal (perform Step 0), then ru
 ros2 launch keyboard_joy keyboard_joy.launch.py
 ```
 Once running, focus the terminal and use the configured keys (e.g., '1', '2', '3' - check `keyboard_joy.launch.py` for specifics) to control the robot. Observe movement in Gazebo.
-
-### Step 4: Observe Autonomous Behavior (Example)
-Behavior depends on the specific `hector_gazebo` world and plugin configurations.
-* In the Gazebo window, press 'Q' (or other designated key per package documentation) to potentially trigger or observe autonomous actions.
